@@ -3,7 +3,6 @@
 import { useEffect, useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { getSession } from '@/lib/auth';
 
 interface ProductImage {
   id: number;
@@ -48,8 +47,9 @@ function NuevoProductoContent() {
   }, [editId, isAdmin]);
 
   const checkAuth = async () => {
-    const session = await getSession();
-    if (!session) {
+    const res = await fetch('/api/session');
+    const { authenticated } = await res.json();
+    if (!authenticated) {
       router.push('/admin');
       return;
     }

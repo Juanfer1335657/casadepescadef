@@ -6,7 +6,6 @@ import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
-import { getSession } from '@/lib/auth';
 
 interface ProductImage {
   id: number;
@@ -35,8 +34,9 @@ export default function InventarioPage() {
   }, []);
 
   const checkAuthAndFetch = async () => {
-    const session = await getSession();
-    if (!session) {
+    const res = await fetch('/api/session');
+    const { authenticated } = await res.json();
+    if (!authenticated) {
       router.push('/admin');
       return;
     }

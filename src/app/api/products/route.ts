@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import sql, { ProductWithImages } from '@/lib/db';
-import { getSession } from '@/lib/auth';
+import { getSession } from '@/lib/auth-server';
 
 export async function GET(request: NextRequest) {
   try {

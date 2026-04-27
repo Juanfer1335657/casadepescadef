@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getSession } from '@/lib/auth';
 
 interface Stats {
   totalProducts: number;
@@ -19,15 +18,16 @@ export default function AdminDashboard() {
   }, []);
 
   const checkAuth = async () => {
-    const session = await getSession();
-    if (!session) {
+    const res = await fetch('/api/session');
+    const { authenticated } = await res.json();
+    if (!authenticated) {
       router.push('/admin');
       return;
     }
     
     try {
-      const res = await fetch('/api/products');
-      const products = await res.json();
+      const resProducts = await fetch('/api/products');
+      const products = await resProducts.json();
       setStats({ totalProducts: products.length });
     } catch (error) {
       console.error('Error fetching stats:', error);
