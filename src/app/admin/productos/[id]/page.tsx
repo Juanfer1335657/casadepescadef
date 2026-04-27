@@ -34,7 +34,7 @@ function NuevoProductoContent() {
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
   const [images, setImages] = useState<string[]>([]);
-  const [newImageUrl, setNewImageUrl] = useState('');
+  const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
     checkAuth();
@@ -74,17 +74,46 @@ function NuevoProductoContent() {
     }
   };
 
-  const handleAddImage = () => {
-    if (newImageUrl.trim() && isValidImageUrl(newImageUrl.trim())) {
-      setImages([...images, newImageUrl.trim()]);
-      setNewImageUrl('');
-    } else {
-      alert('Por favor ingresa una URL de imagen válida');
-    }
+const handleRemoveImage = (index: number) => {
+    setImages(images.filter((_, i) => i !== index));
   };
 
-  const handleRemoveImage = (index: number) => {
-    setImages(images.filter((_, i) => i !== index));
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
+
+    setUploading(true);
+    
+    for (const file of Array.from(files)) {
+      if (!file.type.startsWith('image/')) {
+        alert('Solo se permiten archivos de imagen');
+        continue;
+      }
+
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          setImages(prev => [...prev, data.url]);
+        } else {
+          const errorData = await res.json();
+          alert(errorData.error || 'Error al subir imagen');
+        }
+      } catch (error) {
+        console.error('Error uploading file:', error);
+        alert('Error al subir imagen');
+      }
+    }
+
+    setUploading(false);
+    e.target.value = '';
   };
 
   const isValidImageUrl = (url: string) => {
@@ -325,32 +354,33 @@ function NuevoProductoContent() {
             }}>
               Imágenes del Producto
             </label>
-            <div style={{ display: 'flex', gap: '8px', marginBottom: '12px' }}>
-              <input
-                type="url"
-                value={newImageUrl}
-                onChange={e => setNewImageUrl(e.target.value)}
-                className="input-field"
-                placeholder="https://ejemplo.com/imagen.jpg"
-              />
-              <button
-                type="button"
-                onClick={handleAddImage}
-                style={{
-                  padding: '12px 16px',
-                  background: '#0d2b45',
-                  color: '#ffffff',
-                  borderRadius: '4px',
-                  fontWeight: 600,
-                  whiteSpace: 'nowrap',
-                }}
-              >
-                Agregar
-              </button>
+            
+            <div style={{ marginBottom: '12px' }}>
+              <label style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '12px 20px',
+                background: '#52652a',
+                color: '#ffffff',
+                borderRadius: '4px',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}>
+                {uploading ? 'Subiendo...' : 'Seleccionar imágenes'}
+                <input
+                  type="file"
+                  accept="image/jpeg,image/png,image/webp"
+                  multiple
+                  onChange={handleFileChange}
+                  style={{ display: 'none' }}
+                  disabled={uploading}
+                />
+              </label>
+              <p style={{ fontSize: '12px', color: '#43474d', marginTop: '8px' }}>
+                Formatos: JPG, PNG, WebP
+              </p>
             </div>
-            <p style={{ fontSize: '12px', color: '#43474d', marginBottom: '12px' }}>
-              Ingresa URLs de imágenes (unsplash, vercel, etc.)
-            </p>
 
             {images.length > 0 && (
               <div style={{
