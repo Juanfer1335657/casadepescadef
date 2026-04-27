@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import sql, { ProductWithImages } from '@/lib/db';
+import sql from '@/lib/db';
 import { getSession } from '@/lib/auth-server';
 
 export async function GET(request: NextRequest) {
@@ -53,10 +53,10 @@ export async function GET(request: NextRequest) {
       ORDER BY p.created_at DESC
     `;
 
-    return NextResponse.json(products);
+    return NextResponse.json(products || []);
   } catch (error) {
     console.error('Error fetching products:', error);
-    return NextResponse.json({ error: 'Error al obtener productos' }, { status: 500 });
+    return NextResponse.json({ error: 'Error al obtener productos', details: String(error) }, { status: 500 });
   }
 }
 

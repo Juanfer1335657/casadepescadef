@@ -35,8 +35,14 @@ export default function Home() {
   const fetchProducts = async () => {
     try {
       const res = await fetch('/api/products');
+      if (!res.ok) {
+        console.error('Error fetching products:', res.status);
+        return;
+      }
       const data = await res.json();
-      setProducts(data);
+      if (Array.isArray(data)) {
+        setProducts(data);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -88,7 +94,7 @@ export default function Home() {
             <div style={{ textAlign: 'center', padding: '64px' }}>
               <p>Cargando productos...</p>
             </div>
-          ) : products.length === 0 ? (
+          ) : products.length === 0 || !products ? (
             <div style={{ textAlign: 'center', padding: '64px' }}>
               <h2 style={{ marginBottom: '16px' }}>No hay productos disponibles</h2>
               <p style={{ color: '#43474d' }}>Pronto tendremos nuevos artículos de pesca.</p>
