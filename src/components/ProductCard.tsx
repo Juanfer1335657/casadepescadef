@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useState } from 'react';
 import { formatCOP } from '@/lib/colombia';
+import { useCart } from '@/context/CartContext';
 
 interface ProductImage {
   id: number;
@@ -29,11 +30,25 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, onOpenModal, onEdit, onDelete, isAdmin = false }: ProductCardProps) {
+  const { addItem } = useCart();
   const images = product.images || [];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const [added, setAdded] = useState(false);
 
   const primaryImage = images.find(img => img.is_primary) || images[0];
   const displayImage = primaryImage?.image_url || 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?w=400';
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    addItem({
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: displayImage,
+    });
+    setAdded(true);
+    setTimeout(() => setAdded(false), 1500);
+  };
 
   return (
     <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
@@ -164,10 +179,6 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
             color: '#43474d',
             marginBottom: '12px',
             flex: 1,
-            display: '-webkit-box',
-            WebkitLineClamp: 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden',
           }}>
             {product.description}
           </p>
@@ -212,23 +223,38 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
                 Eliminar
               </button>
             </div>
-          ) : onOpenModal ? (
-            <button
-              onClick={() => onOpenModal(product)}
-              style={{
-                padding: '8px 16px',
-                background: '#52652a',
-                color: '#ffffff',
-                borderRadius: '4px',
-                fontSize: '12px',
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-              }}
-            >
-              Comprar
-            </button>
-          ) : null}
+          ) : (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <button
+                onClick={() => onOpenModal?.(product)}
+                style={{
+                  padding: '8px 12px',
+                  background: '#f1eee7',
+                  color: '#0d2b45',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  border: '1px solid #c3c6ce',
+                }}
+              >
+                Info
+              </button>
+              <button
+                onClick={handleAddToCart}
+                style={{
+                  padding: '8px 16px',
+                  background: added ? '#52652a' : '#0d2b45',
+                  color: '#ffffff',
+                  borderRadius: '4px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  transition: 'background 0.2s',
+                }}
+              >
+                {added ? '¡Agregado!' : 'Agregar'}
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

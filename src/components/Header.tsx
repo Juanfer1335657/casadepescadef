@@ -2,13 +2,15 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
+import { useCart } from '@/context/CartContext';
 
 interface HeaderProps {
   cartCount?: number;
   showAdminLink?: boolean;
 }
 
-export default function Header({ cartCount = 0, showAdminLink = false }: HeaderProps) {
+export default function Header({ showAdminLink = false }: HeaderProps) {
+  const { setIsOpen, totalItems } = useCart();
   return (
     <header style={{
       background: '#ffffff',
@@ -81,7 +83,7 @@ export default function Header({ cartCount = 0, showAdminLink = false }: HeaderP
           )}
           
           <button 
-            onClick={() => window.dispatchEvent(new CustomEvent('openCart'))}
+            onClick={() => setIsOpen(true)}
             style={{
               position: 'relative',
               background: 'none',
@@ -95,14 +97,23 @@ export default function Header({ cartCount = 0, showAdminLink = false }: HeaderP
               <circle cx="20" cy="21" r="1"/>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
             </svg>
-            {cartCount > 0 && (
-              <span className="badge" style={{
+            {totalItems > 0 && (
+              <span style={{
                 position: 'absolute',
                 top: 0,
                 right: 0,
                 background: '#52652a',
+                color: '#ffffff',
+                borderRadius: '50%',
+                width: '18px',
+                height: '18px',
+                fontSize: '11px',
+                fontWeight: 700,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}>
-                {cartCount}
+                {totalItems}
               </span>
             )}
           </button>
