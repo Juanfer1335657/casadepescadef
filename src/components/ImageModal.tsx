@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 
 interface ProductImage {
@@ -28,6 +28,36 @@ interface ImageModalProps {
 
 export default function ImageModal({ product, isOpen, onClose }: ImageModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'hidden';
+      
+      window.history.pushState({ modal: true }, '', window.location.href);
+      const handlePopState = () => {
+        onClose();
+      };
+      window.addEventListener('popstate', handlePopState);
+      
+      return () => {
+        window.removeEventListener('popstate', handlePopState);
+      };
+    }
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = '';
+    };
+  }, [isOpen, onClose]);
+
+  useEffect(() => {
+    setCurrentIndex(0);
+  }, [product]);
 
   if (!isOpen || !product) return null;
 

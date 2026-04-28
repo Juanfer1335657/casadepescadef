@@ -7,22 +7,26 @@ import ProductCard from '@/components/ProductCard';
 import PurchaseModal from '@/components/PurchaseModal';
 import ImageModal from '@/components/ImageModal';
 
-const CATEGORIES = [
-  { value: 'Todos', label: 'Todos' },
-  { value: 'Cañas', label: 'Cañas' },
-  { value: 'Reeles', label: 'Reeles' },
-  { value: 'Señuelos', label: 'Señuelos' },
-  { value: 'Anzuelos', label: 'Anzuelos' },
-  { value: 'Lineas', label: 'Líneas' },
-  { value: 'Accesorios', label: 'Accesorios' },
-  { value: 'Cajas', label: 'Cajas' },
-  { value: 'Chalecos', label: 'Chalecos' },
-  { value: 'Otros', label: 'Otros' },
-];
-
 const normalizeCategory = (cat: string | null): string => {
   if (!cat) return '';
   return cat.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+};
+
+const LABELS: Record<string, string> = {
+  'cañas': 'Cañas',
+  'reeles': 'Reeles',
+  'señuelos': 'Señuelos',
+  'anzuelos': 'Anzuelos',
+  'lineas': 'Líneas',
+  'accesorios': 'Accesorios',
+  'cajas': 'Cajas',
+  'chalecos': 'Chalecos',
+  'otros': 'Otros',
+};
+
+const getCategoryLabel = (cat: string): string => {
+  const norm = normalizeCategory(cat);
+  return LABELS[norm] || cat;
 };
 
 interface ProductImage {
@@ -72,6 +76,14 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const availableCategories = useMemo(() => {
+    const cats = new Set<string>();
+    products.forEach(p => {
+      if (p.category) cats.add(p.category);
+    });
+    return Array.from(cats).sort((a, b) => getCategoryLabel(a).localeCompare(getCategoryLabel(b)));
+  }, [products]);
 
   const filteredProducts = useMemo(() => {
     if (selectedCategory === 'Todos') return products;
@@ -145,10 +157,30 @@ export default function Home() {
             msOverflowStyle: 'none',
             paddingBottom: '4px',
           }}>
-            {CATEGORIES.map((cat) => (
+            <button
+              onClick={() => setSelectedCategory('Todos')}
+              style={{
+                padding: 'clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px)',
+                borderRadius: '20px',
+                border: '1px solid',
+                fontSize: 'clamp(11px, 2.5vw, 13px)',
+                fontWeight: 600,
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: selectedCategory === 'Todos' ? '#0d2b45' : '#ffffff',
+                color: selectedCategory === 'Todos' ? '#ffffff' : '#0d2b45',
+                borderColor: selectedCategory === 'Todos' ? '#0d2b45' : '#c3c6ce',
+                whiteSpace: 'nowrap',
+                flexShrink: 0,
+                minHeight: '36px',
+              }}
+            >
+              Todos
+            </button>
+            {availableCategories.map((cat) => (
               <button
-                key={cat.value}
-                onClick={() => setSelectedCategory(cat.value)}
+                key={cat}
+                onClick={() => setSelectedCategory(cat)}
                 style={{
                   padding: 'clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px)',
                   borderRadius: '20px',
@@ -157,15 +189,15 @@ export default function Home() {
                   fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'all 0.2s',
-                  background: selectedCategory === cat.value ? '#0d2b45' : '#ffffff',
-                  color: selectedCategory === cat.value ? '#ffffff' : '#0d2b45',
-                  borderColor: selectedCategory === cat.value ? '#0d2b45' : '#c3c6ce',
+                  background: selectedCategory === cat ? '#0d2b45' : '#ffffff',
+                  color: selectedCategory === cat ? '#ffffff' : '#0d2b45',
+                  borderColor: selectedCategory === cat ? '#0d2b45' : '#c3c6ce',
                   whiteSpace: 'nowrap',
                   flexShrink: 0,
                   minHeight: '36px',
                 }}
               >
-                {cat.label}
+                {getCategoryLabel(cat)}
               </button>
             ))}
           </div>

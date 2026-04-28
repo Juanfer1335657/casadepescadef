@@ -104,56 +104,65 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
     >
       <div
         style={{
-          width: '100%',
-          maxWidth: '480px',
+          width: 'clamp(280px, 90vw, 420px)',
+          maxWidth: '420px',
           background: '#ffffff',
           height: '100%',
           overflow: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
         }}
         onClick={e => e.stopPropagation()}
       >
         <div style={{
-          padding: '24px',
+          padding: 'clamp(14px, 4vw, 24px)',
           borderBottom: '1px solid #c3c6ce',
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
+          flexShrink: 0,
         }}>
           <h2 style={{
             fontFamily: "'Epilogue', sans-serif",
-            fontSize: '24px',
+            fontSize: 'clamp(18px, 5vw, 24px)',
             fontWeight: 700,
             color: '#0d2b45',
             margin: 0,
           }}>
-            {step === 'cart' ? 'Carrito de Compras' : 'Datos de Envío'}
+            {step === 'cart' ? 'Carrito' : 'Datos de Envío'}
           </h2>
           <button
             onClick={() => setIsOpen(false)}
             style={{
               background: 'none',
               border: 'none',
-              fontSize: '24px',
+              fontSize: 'clamp(20px, 5vw, 24px)',
               cursor: 'pointer',
               color: '#43474d',
+              width: 'clamp(32px, 8vw, 40px)',
+              height: 'clamp(32px, 8vw, 40px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             ✕
           </button>
         </div>
 
-        <div style={{ padding: '24px' }}>
+        <div style={{ padding: 'clamp(14px, 4vw, 24px)', flex: 1, overflow: 'auto' }}>
           {items.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '48px 0' }}>
-              <p style={{ color: '#43474d', marginBottom: '16px' }}>Tu carrito está vacío</p>
+            <div style={{ textAlign: 'center', padding: 'clamp(32px, 8vw, 48px) 0' }}>
+              <p style={{ color: '#43474d', marginBottom: 'clamp(12px, 4vw, 16px)', fontSize: 'clamp(13px, 3.5vw, 15px)' }}>Tu carrito está vacío</p>
               <button
                 onClick={() => setIsOpen(false)}
                 style={{
-                  padding: '12px 24px',
+                  padding: 'clamp(10px, 3vw, 12px) clamp(16px, 5vw, 24px)',
                   background: '#0d2b45',
                   color: '#ffffff',
                   borderRadius: '4px',
                   fontWeight: 600,
+                  fontSize: 'clamp(12px, 3.5vw, 14px)',
                 }}
               >
                 Continuar Comprando
@@ -161,16 +170,16 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
             </div>
           ) : step === 'cart' ? (
             <>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginBottom: '24px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(10px, 3vw, 16px)', marginBottom: 'clamp(16px, 4vw, 24px)' }}>
                 {items.map(item => (
                   <div key={item.id} style={{
                     display: 'flex',
-                    gap: '12px',
-                    padding: '12px',
+                    gap: 'clamp(8px, 3vw, 12px)',
+                    padding: 'clamp(8px, 3vw, 12px)',
                     background: '#f1eee7',
                     borderRadius: '8px',
                   }}>
-                    <div style={{ width: '80px', height: '80px', position: 'relative', flexShrink: 0 }}>
+                    <div style={{ width: 'clamp(60px, 15vw, 80px)', height: 'clamp(60px, 15vw, 80px)', position: 'relative', flexShrink: 0 }}>
                       <Image
                         src={item.image}
                         alt={item.name}
@@ -178,47 +187,47 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
                         style={{ objectFit: 'cover', borderRadius: '4px' }}
                       />
                     </div>
-                    <div style={{ flex: 1 }}>
+                    <div style={{ flex: 1, minWidth: 0 }}>
                       <h4 style={{
                         fontFamily: "'Epilogue', sans-serif",
-                        fontSize: '14px',
+                        fontSize: 'clamp(12px, 3.5vw, 14px)',
                         fontWeight: 600,
                         color: '#0d2b45',
                         marginBottom: '4px',
                       }}>
                         {item.name}
                       </h4>
-                      <p style={{ fontSize: '16px', fontWeight: 700, color: '#52652a', marginBottom: '8px' }}>
+                      <p style={{ fontSize: 'clamp(14px, 4vw, 16px)', fontWeight: 700, color: '#52652a', marginBottom: '8px' }}>
                         {formatCOP(item.price)}
                       </p>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 'clamp(4px, 2vw, 8px)' }}>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           style={{
-                            width: '28px',
-                            height: '28px',
+                            width: 'clamp(24px, 6vw, 28px)',
+                            height: 'clamp(24px, 6vw, 28px)',
                             border: '1px solid #c3c6ce',
                             background: '#ffffff',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '16px',
+                            fontSize: 'clamp(14px, 4vw, 16px)',
                           }}
                         >
                           −
                         </button>
-                        <span style={{ fontWeight: 600, minWidth: '24px', textAlign: 'center' }}>
+                        <span style={{ fontWeight: 600, minWidth: 'clamp(20px, 5vw, 24px)', textAlign: 'center', fontSize: 'clamp(12px, 3.5vw, 14px)' }}>
                           {item.quantity}
                         </span>
                         <button
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
                           style={{
-                            width: '28px',
-                            height: '28px',
+                            width: 'clamp(24px, 6vw, 28px)',
+                            height: 'clamp(24px, 6vw, 28px)',
                             border: '1px solid #c3c6ce',
                             background: '#ffffff',
                             borderRadius: '4px',
                             cursor: 'pointer',
-                            fontSize: '16px',
+                            fontSize: 'clamp(14px, 4vw, 16px)',
                           }}
                         >
                           +
@@ -231,7 +240,7 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
                             border: 'none',
                             color: '#ba1a1a',
                             cursor: 'pointer',
-                            fontSize: '12px',
+                            fontSize: 'clamp(10px, 3vw, 12px)',
                           }}
                         >
                           Eliminar
@@ -244,15 +253,15 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
 
               <div style={{
                 borderTop: '1px solid #c3c6ce',
-                paddingTop: '24px',
+                paddingTop: 'clamp(14px, 4vw, 24px)',
               }}>
                 <div style={{
                   display: 'flex',
                   justifyContent: 'space-between',
-                  marginBottom: '16px',
+                  marginBottom: 'clamp(12px, 4vw, 16px)',
                 }}>
-                  <span style={{ fontSize: '16px', fontWeight: 600, color: '#43474d' }}>Subtotal:</span>
-                  <span style={{ fontSize: '18px', fontWeight: 700, color: '#0d2b45' }}>
+                  <span style={{ fontSize: 'clamp(14px, 4vw, 16px)', fontWeight: 600, color: '#43474d' }}>Subtotal:</span>
+                  <span style={{ fontSize: 'clamp(16px, 4vw, 18px)', fontWeight: 700, color: '#0d2b45' }}>
                     {formatCOP(totalPrice)}
                   </span>
                 </div>
@@ -260,12 +269,12 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
                   onClick={() => setStep('shipping')}
                   style={{
                     width: '100%',
-                    padding: '16px',
+                    padding: 'clamp(12px, 4vw, 16px)',
                     background: '#0d2b45',
                     color: '#ffffff',
                     borderRadius: '4px',
                     fontWeight: 600,
-                    fontSize: '14px',
+                    fontSize: 'clamp(12px, 3.5vw, 14px)',
                     border: 'none',
                     cursor: 'pointer',
                   }}

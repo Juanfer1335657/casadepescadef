@@ -127,19 +127,20 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        padding: '20px',
+        padding: 'clamp(8px, 4vw, 20px)',
       }}
       onClick={onClose}
     >
       <div 
         style={{
           background: '#ffffff',
-          borderRadius: '16px',
+          borderRadius: 'clamp(12px, 4vw, 16px)',
           maxWidth: '700px',
           width: '100%',
-          maxHeight: '90vh',
+          maxHeight: 'clamp(85vh, 90vw, 90vh)',
           overflow: 'auto',
           animation: 'slideUp 0.3s ease-out',
+          position: 'relative',
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -147,25 +148,26 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
           onClick={onClose}
           style={{
             position: 'absolute',
-            top: '16px',
-            right: '16px',
+            top: 'clamp(8px, 2vw, 16px)',
+            right: 'clamp(8px, 2vw, 16px)',
             background: 'rgba(255,255,255,0.9)',
             border: 'none',
-            width: '36px',
-            height: '36px',
+            width: 'clamp(32px, 8vw, 36px)',
+            height: 'clamp(32px, 8vw, 36px)',
             borderRadius: '50%',
-            fontSize: '20px',
+            fontSize: 'clamp(16px, 4vw, 20px)',
             cursor: 'pointer',
             zIndex: 10,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
+            lineHeight: 1,
           }}
         >
           ×
         </button>
 
-        <div style={{ padding: '32px' }}>
+        <div style={{ padding: 'clamp(16px, 5vw, 32px)' }}>
           <h2 style={{
             fontFamily: "'Epilogue', sans-serif",
             fontSize: '24px',
