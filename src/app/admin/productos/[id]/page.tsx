@@ -17,6 +17,7 @@ interface Product {
   description: string | null;
   price: number;
   category: string | null;
+  units: number;
   images: ProductImage[];
 }
 
@@ -33,6 +34,7 @@ function NuevoProductoContent() {
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
   const [category, setCategory] = useState('');
+  const [units, setUnits] = useState('1');
   const [images, setImages] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
 
@@ -71,6 +73,7 @@ function NuevoProductoContent() {
         setDescription(product.description || '');
         setPrice(product.price ? product.price.toString() : '');
         setCategory(product.category || '');
+        setUnits(product.units ? product.units.toString() : '1');
         const imageUrls = product.images?.map ? product.images.map((img: ProductImage) => img.image_url) : [];
         setImages(imageUrls || []);
       }
@@ -90,6 +93,7 @@ function NuevoProductoContent() {
     if (!files || files.length === 0) return;
 
     setUploading(true);
+    let uploadedCount = 0;
     
     for (const file of Array.from(files)) {
       if (!file.type.startsWith('image/')) {
@@ -108,15 +112,23 @@ function NuevoProductoContent() {
 
         if (res.ok) {
           const data = await res.json();
-          setImages(prev => [...prev, data.url]);
+          if (data.url) {
+            setImages(prev => [...prev, data.url]);
+            uploadedCount++;
+          }
         } else {
           const errorData = await res.json();
+          console.error('Upload error:', errorData);
           alert(errorData.error || 'Error al subir imagen');
         }
       } catch (error) {
         console.error('Error uploading file:', error);
         alert('Error al subir imagen');
       }
+    }
+
+    if (uploadedCount > 0) {
+      alert(`Se subiron ${uploadedCount} imagen(es) correctamente`);
     }
 
     setUploading(false);
@@ -143,6 +155,7 @@ function NuevoProductoContent() {
         description: description.trim(),
         price: parseInt(price),
         category: category.trim(),
+        units: parseInt(units) || 1,
         images,
       };
 
@@ -227,7 +240,7 @@ function NuevoProductoContent() {
               fontWeight: 700,
               color: '#0d2b45',
             }}>
-              LA CASA DE LA PESCA VILLAVICENCIO - ADMIN
+              LA CASA DE LA PESCA DEL LLANO - ADMIN
             </span>
           </Link>
 
@@ -348,6 +361,26 @@ function NuevoProductoContent() {
                 <option value="Chalecos">Chalecos</option>
                 <option value="otros">Otros</option>
               </select>
+            </div>
+
+            <div>
+              <label style={{
+                display: 'block',
+                fontSize: '14px',
+                fontWeight: 600,
+                marginBottom: '8px',
+                color: '#1c1c18',
+              }}>
+                Unidades Disponibles
+              </label>
+              <input
+                type="number"
+                value={units}
+                onChange={e => setUnits(e.target.value)}
+                className="input-field"
+                placeholder="1"
+                min="0"
+              />
             </div>
           </div>
 

@@ -59,7 +59,7 @@ export default function Header({ showAdminLink = false }: HeaderProps) {
               lineHeight: 1.2,
               whiteSpace: 'nowrap',
             }}>
-              LA CASA DE LA PESCA VILLAVICENCIO
+              LA CASA DE LA PESCA DEL LLANO
             </h1>
             <p style={{
               fontSize: '10px',

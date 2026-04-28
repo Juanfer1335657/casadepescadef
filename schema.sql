@@ -1,5 +1,5 @@
 -- =============================================
--- Schema para La Casa De La Pesca Villavicencio
+-- Schema para La Casa De La Pesca del Llano
 -- Neon PostgreSQL
 -- =============================================
 
@@ -10,6 +10,7 @@ CREATE TABLE IF NOT EXISTS products (
   description TEXT,
   price INTEGER NOT NULL DEFAULT 0,
   category VARCHAR(100),
+  units INTEGER NOT NULL DEFAULT 1,
   created_at TIMESTAMP DEFAULT NOW(),
   updated_at TIMESTAMP DEFAULT NOW()
 );
@@ -24,20 +25,20 @@ CREATE TABLE IF NOT EXISTS product_images (
 );
 
 -- Insertar producto de ejemplo
-INSERT INTO products (name, description, price, category)
-VALUES ('Caña de Pescar Shimano', 'Caña de pescar profesional de fibra de carbono', 250000, 'Cañas');
+INSERT INTO products (name, description, price, category, units)
+VALUES ('Caña de Pescar Shimano', 'Caña de pescar profesional de fibra de carbono', 250000, 'Cañas', 5);
 
 INSERT INTO product_images (product_id, image_url, is_primary)
 VALUES (1, 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?w=400', true);
 
-INSERT INTO products (name, description, price, category)
-VALUES ('Carrete Shimano Stradic', 'Carrete de alta velocidad para pesca deportiva', 180000, 'Reeles');
+INSERT INTO products (name, description, price, category, units)
+VALUES ('Carrete Shimano Stradic', 'Carrete de alta velocidad para pesca deportiva', 180000, 'Reeles', 3);
 
 INSERT INTO product_images (product_id, image_url, is_primary)
 VALUES (2, 'https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400', true);
 
-INSERT INTO products (name, description, price, category)
-VALUES ('Anzuelo Triple #5', 'Anzuelos resistentes de acero inoxidable', 15000, 'Accesorios');
+INSERT INTO products (name, description, price, category, units)
+VALUES ('Anzuelo Triple #5', 'Anzuelos resistentes de acero inoxidable', 15000, 'Accesorios', 10);
 
 INSERT INTO product_images (product_id, image_url, is_primary)
 VALUES (3, 'https://images.unsplash.com/photo-1534054526808-71d6de519d7e?w=400', true);

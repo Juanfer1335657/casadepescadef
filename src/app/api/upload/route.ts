@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { put } from '@vercel/blob';
 import { getSession } from '@/lib/auth-server';
 
+export const runtime = 'nodejs';
+export const dynamic = 'force-dynamic';
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getSession();
@@ -18,11 +21,13 @@ export async function POST(request: NextRequest) {
 
     const blob = await put(file.name, file, {
       access: 'public',
+      addRandomSuffix: true,
     });
 
-    return NextResponse.json({ url: blob.url });
+    return NextResponse.json({ url: blob.url, success: true });
   } catch (error) {
     console.error('Error uploading file:', error);
-    return NextResponse.json({ error: 'Error al subir archivo' }, { status: 500 });
+    const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+    return NextResponse.json({ error: 'Error al subir archivo', details: errorMessage }, { status: 500 });
   }
 }

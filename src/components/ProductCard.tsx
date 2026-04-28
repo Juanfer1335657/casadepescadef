@@ -18,6 +18,7 @@ interface Product {
   description: string | null;
   price: number;
   category: string | null;
+  units: number;
   images: ProductImage[];
 }
 
@@ -198,6 +199,16 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
           }}>
             {formatCOP(product.price)}
           </span>
+          
+          {product.units > 0 && (
+            <span style={{
+              fontSize: '11px',
+              color: product.units <= 2 ? '#ba1a1a' : '#52652a',
+              fontWeight: 600,
+            }}>
+              {product.units} {product.units === 1 ? 'unidad' : 'unidades'} disponible{product.units > 1 ? 's' : ''}
+            </span>
+          )}
 
           {isAdmin ? (
             <div style={{ display: 'flex', gap: '8px' }}>

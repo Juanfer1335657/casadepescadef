@@ -17,6 +17,7 @@ interface Product {
   description: string | null;
   price: number;
   category: string | null;
+  units: number;
   images: ProductImage[];
 }
 
@@ -88,7 +89,7 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
     const carrierName = selectedCarrier === 'servientrega' ? 'Servientrega' : 'Interrapidisimo';
     const carrierData = shippingInfo[selectedCarrier];
     
-    const message = `🛒 Nuevo Pedido - La Casa De La Pesca Villavicencio
+    const message = `🛒 Nuevo Pedido - La Casa De La Pesca del Llano
 
 *Producto:*
 • ${product.name} - ${formatCOP(product.price)}

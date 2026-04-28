@@ -10,6 +10,7 @@ export interface Product {
   description: string | null;
   price: number;
   category: string | null;
+  units: number;
   created_at: Date;
   updated_at: Date;
 }

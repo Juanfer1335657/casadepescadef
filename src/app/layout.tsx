@@ -5,8 +5,8 @@ import CartModal from "@/components/CartModal";
 import CartNotification from "@/components/CartNotification";
 
 export const metadata: Metadata = {
-  title: "La Casa De La Pesca Villavicencio",
-  description: "Tienda de artículos de pesca en Villavicencio - La Casa De La Pesca Villavicencio",
+  title: "La Casa De La Pesca del Llano",
+  description: "Tienda de artículos de pesca - La Casa De La Pesca del Llano",
 };
 
 export default function RootLayout({

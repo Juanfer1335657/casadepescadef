@@ -20,6 +20,7 @@ interface Product {
   description: string | null;
   price: number;
   category: string | null;
+  units: number;
   images: ProductImage[];
 }
 
@@ -114,7 +115,7 @@ export default function InventarioPage() {
               fontWeight: 700,
               color: '#0d2b45',
             }}>
-              LA CASA DE LA PESCA VILLAVICENCIO - ADMIN
+              LA CASA DE LA PESCA DEL LLANO - ADMIN
             </span>
           </Link>
 

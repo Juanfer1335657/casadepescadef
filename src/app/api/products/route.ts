@@ -10,7 +10,7 @@ export async function GET(request: NextRequest) {
     if (id) {
       const products = await sql`
         SELECT 
-          p.id, p.name, p.description, p.price, p.category, p.created_at, p.updated_at,
+          p.id, p.name, p.description, p.price, p.category, p.units, p.created_at, p.updated_at,
           COALESCE(
             json_agg(
               DISTINCT jsonb_build_object(
@@ -34,7 +34,7 @@ export async function GET(request: NextRequest) {
 
     const products = await sql`
       SELECT 
-        p.id, p.name, p.description, p.price, p.category, p.created_at, p.updated_at,
+        p.id, p.name, p.description, p.price, p.category, p.units, p.created_at, p.updated_at,
         COALESCE(
           json_agg(
             DISTINCT jsonb_build_object(
@@ -67,15 +67,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
-    const { name, description, price, category, images } = await request.json();
+    const { name, description, price, category, units, images } = await request.json();
 
     if (!name || !price) {
       return NextResponse.json({ error: 'Nombre y precio son requeridos' }, { status: 400 });
     }
 
     const result = await sql`
-      INSERT INTO products (name, description, price, category)
-      VALUES (${name}, ${description || null}, ${price}, ${category || null})
+      INSERT INTO products (name, description, price, category, units)
+      VALUES (${name}, ${description || null}, ${price}, ${category || null}, ${units || 1})
       RETURNING id
     `;
 
@@ -104,7 +104,7 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
     }
 
-    const { id, name, description, price, category, images } = await request.json();
+    const { id, name, description, price, category, units, images } = await request.json();
 
     if (!id || !name || !price) {
       return NextResponse.json({ error: 'ID, nombre y precio son requeridos' }, { status: 400 });
@@ -112,7 +112,7 @@ export async function PUT(request: NextRequest) {
 
     await sql`
       UPDATE products 
-      SET name = ${name}, description = ${description || null}, price = ${price}, category = ${category || null}, updated_at = NOW()
+      SET name = ${name}, description = ${description || null}, price = ${price}, category = ${category || null}, units = ${units || 1}, updated_at = NOW()
       WHERE id = ${id}
     `;
 
