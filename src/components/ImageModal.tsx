@@ -51,16 +51,20 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
         onClick={onClose}
         style={{
           position: 'absolute',
-          top: '20px',
-          right: '20px',
+          top: 'clamp(12px, 4vw, 20px)',
+          right: 'clamp(12px, 4vw, 20px)',
           background: 'rgba(255,255,255,0.9)',
           border: 'none',
-          width: '44px',
-          height: '44px',
+          width: 'clamp(36px, 10vw, 44px)',
+          height: 'clamp(36px, 10vw, 44px)',
           borderRadius: '50%',
-          fontSize: '24px',
+          fontSize: 'clamp(18px, 5vw, 24px)',
           cursor: 'pointer',
           zIndex: 2001,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          lineHeight: 1,
         }}
       >
         ×
@@ -75,17 +79,20 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
             }}
             style={{
               position: 'absolute',
-              left: '20px',
+              left: 'clamp(8px, 3vw, 20px)',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '50px',
-              height: '50px',
+              width: 'clamp(36px, 10vw, 50px)',
+              height: 'clamp(36px, 10vw, 50px)',
               borderRadius: '50%',
               background: 'rgba(255,255,255,0.9)',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '24px',
+              fontSize: 'clamp(18px, 5vw, 24px)',
               zIndex: 2001,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             ‹
@@ -97,17 +104,20 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
             }}
             style={{
               position: 'absolute',
-              right: '20px',
+              right: 'clamp(8px, 3vw, 20px)',
               top: '50%',
               transform: 'translateY(-50%)',
-              width: '50px',
-              height: '50px',
+              width: 'clamp(36px, 10vw, 50px)',
+              height: 'clamp(36px, 10vw, 50px)',
               borderRadius: '50%',
               background: 'rgba(255,255,255,0.9)',
               border: 'none',
               cursor: 'pointer',
-              fontSize: '24px',
+              fontSize: 'clamp(18px, 5vw, 24px)',
               zIndex: 2001,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
             ›
@@ -119,8 +129,8 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
         style={{
           position: 'relative',
           width: '90vw',
-          height: '80vh',
-          maxWidth: '900px',
+          height: 'clamp(50vh, 70vw, 80vh)',
+          maxWidth: 'clamp(300px, 90vw, 900px)',
         }}
         onClick={e => e.stopPropagation()}
       >
@@ -135,20 +145,20 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
 
       <div style={{
         position: 'absolute',
-        bottom: '20px',
+        bottom: 'clamp(40px, 8vh, 60px)',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
-        gap: '10px',
+        gap: 'clamp(6px, 2vw, 10px)',
       }}>
         {images.map((_, idx) => (
           <div
             key={idx}
             onClick={() => setCurrentIndex(idx)}
             style={{
-              width: idx === currentIndex ? '24px' : '10px',
-              height: '10px',
-              borderRadius: '5px',
+              width: idx === currentIndex ? 'clamp(18px, 5vw, 24px)' : 'clamp(8px, 2vw, 10px)',
+              height: 'clamp(8px, 2vw, 10px)',
+              borderRadius: 'clamp(4px, 1vw, 5px)',
               background: idx === currentIndex ? '#ffffff' : 'rgba(255,255,255,0.5)',
               cursor: 'pointer',
               transition: 'all 0.3s',
@@ -159,11 +169,11 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
 
       <div style={{
         position: 'absolute',
-        bottom: '60px',
+        bottom: 'clamp(12px, 4vw, 20px)',
         left: '50%',
         transform: 'translateX(-50%)',
         color: '#ffffff',
-        fontSize: '16px',
+        fontSize: 'clamp(12px, 3vw, 16px)',
         fontWeight: 600,
         textAlign: 'center',
       }}>
