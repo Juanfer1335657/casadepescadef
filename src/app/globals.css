@@ -39,6 +39,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
 }
 
 html {
@@ -247,6 +253,10 @@ input, textarea, select {
 }
 
 @media (max-width: 576px) {
+  html {
+    font-size: 13px;
+  }
+  
   .grid-products {
     grid-template-columns: 1fr;
     gap: 16px;
@@ -259,7 +269,7 @@ input, textarea, select {
 
 @media (max-width: 480px) {
   html {
-    font-size: 13px;
+    font-size: 12px;
   }
   
   .grid-products {
@@ -270,7 +280,7 @@ input, textarea, select {
 
 @media (max-width: 360px) {
   html {
-    font-size: 12px;
+    font-size: 11px;
   }
   
   .grid-products {
@@ -300,17 +310,6 @@ input, textarea, select {
   
   .card {
     touch-action: manipulation;
-  }
-}
-
-@media (hover: none) and (pointer: coarse) and (max-width: 768px) {
-  .grid-products {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-  }
-  
-  .card {
-    border-radius: 10px;
   }
 }
 
@@ -371,8 +370,51 @@ body {
   }
 }
 
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+@media (max-width: 576px) {
+  .card {
+    border-radius: 8px;
+  }
+  
+  .btn-primary, .btn-secondary {
+    padding: 12px 16px;
+    font-size: 12px;
+  }
+  
+  input, select, textarea {
+    font-size: 16px;
+  }
+}
+
 @media (max-width: 480px) {
-  .modal-content > div {
-    padding: 16px !important;
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  section {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+  
+  header > div {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+  
+  main > section {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .container {
+    padding-left: 8px;
+    padding-right: 8px;
   }
 }

@@ -155,16 +155,16 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
         )}
       </div>
 
-      <div style={{ padding: '16px', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div style={{ padding: 'clamp(10px, 2vw, 16px)', flex: 1, display: 'flex', flexDirection: 'column' }}>
         {product.category && (
           <span style={{
-            fontSize: '11px',
+            fontSize: 'clamp(9px, 1.5vw, 11px)',
             fontWeight: 600,
             textTransform: 'uppercase',
             letterSpacing: '0.1em',
             color: '#52652a',
             background: '#d4eca2',
-            padding: '4px 8px',
+            padding: 'clamp(3px, 1vw, 4px) clamp(6px, 1.5vw, 8px)',
             borderRadius: '4px',
             alignSelf: 'flex-start',
             marginBottom: '8px',
@@ -175,7 +175,7 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
 
         <h3 style={{
           fontFamily: "'Epilogue', sans-serif",
-          fontSize: '16px',
+          fontSize: 'clamp(13px, 2vw, 16px)',
           fontWeight: 700,
           color: '#1c1c18',
           marginBottom: '8px',
@@ -186,7 +186,7 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
 
         {product.description && (
           <p style={{
-            fontSize: '14px',
+            fontSize: 'clamp(11px, 1.5vw, 14px)',
             color: '#43474d',
             marginBottom: '12px',
             flex: 1,
@@ -204,7 +204,7 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
           }}>
             <span style={{
               fontFamily: "'Epilogue', sans-serif",
-              fontSize: '22px',
+              fontSize: 'clamp(16px, 3vw, 22px)',
               fontWeight: 700,
               color: '#0d2b45',
             }}>

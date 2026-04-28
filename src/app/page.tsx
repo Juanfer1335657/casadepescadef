@@ -131,30 +131,38 @@ export default function Home() {
         <section style={{
           maxWidth: '1280px',
           margin: '0 auto',
-          padding: '0 16px 24px',
+          padding: '0 12px 16px',
           width: '100%',
         }}>
           <div style={{
             display: 'flex',
-            gap: '8px',
+            gap: '6px',
             flexWrap: 'wrap',
-            marginBottom: '24px',
+            marginBottom: '16px',
+            overflowX: 'auto',
+            WebkitOverflowScrolling: 'touch',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
+            paddingBottom: '4px',
           }}>
             {CATEGORIES.map((cat) => (
               <button
                 key={cat.value}
                 onClick={() => setSelectedCategory(cat.value)}
                 style={{
-                  padding: '8px 16px',
+                  padding: 'clamp(6px, 2vw, 10px) clamp(10px, 3vw, 16px)',
                   borderRadius: '20px',
                   border: '1px solid',
-                  fontSize: '13px',
+                  fontSize: 'clamp(11px, 2.5vw, 13px)',
                   fontWeight: 600,
                   cursor: 'pointer',
                   transition: 'all 0.2s',
                   background: selectedCategory === cat.value ? '#0d2b45' : '#ffffff',
                   color: selectedCategory === cat.value ? '#ffffff' : '#0d2b45',
                   borderColor: selectedCategory === cat.value ? '#0d2b45' : '#c3c6ce',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0,
+                  minHeight: '36px',
                 }}
               >
                 {cat.label}

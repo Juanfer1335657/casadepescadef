@@ -9,20 +9,20 @@ export default function Footer({ showAdminLink = false }: FooterProps) {
     <footer style={{
       background: '#00162a',
       color: '#ffffff',
-      padding: '32px 0 20px',
+      padding: 'clamp(20px, 5vw, 32px) 0 clamp(12px, 3vw, 20px)',
       marginTop: 'auto',
     }}>
       <div style={{
         maxWidth: '1280px',
         margin: '0 auto',
-        padding: '0 16px',
+        padding: '0 clamp(10px, 3vw, 16px)',
         width: '100%',
       }}>
         <div style={{
           display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-          gap: '32px',
-          marginBottom: '24px',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(min(180px, 100%), 1fr))',
+          gap: 'clamp(16px, 4vw, 32px)',
+          marginBottom: 'clamp(16px, 4vw, 24px)',
         }}>
           <div>
             <h3 style={{
