@@ -59,13 +59,20 @@ function NuevoProductoContent() {
   const fetchProduct = async () => {
     try {
       const res = await fetch(`/api/products?id=${editId}`);
+      if (!res.ok) {
+        console.error('Error fetching product:', res.status);
+        setLoadingProduct(false);
+        return;
+      }
       const product: Product = await res.json();
-      if (product) {
-        setName(product.name);
+      console.log('Product fetched:', product);
+      if (product && product.id) {
+        setName(product.name || '');
         setDescription(product.description || '');
-        setPrice(product.price.toString());
+        setPrice(product.price ? product.price.toString() : '');
         setCategory(product.category || '');
-        setImages(product.images?.map(img => img.image_url) || []);
+        const imageUrls = product.images?.map ? product.images.map((img: ProductImage) => img.image_url) : [];
+        setImages(imageUrls || []);
       }
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -74,7 +81,7 @@ function NuevoProductoContent() {
     }
   };
 
-const handleRemoveImage = (index: number) => {
+  const handleRemoveImage = (index: number) => {
     setImages(images.filter((_, i) => i !== index));
   };
 
@@ -352,7 +359,7 @@ const handleRemoveImage = (index: number) => {
               marginBottom: '8px',
               color: '#1c1c18',
             }}>
-              Imágenes del Producto
+              Imágenes del Producto (puedes seleccionar varias)
             </label>
             
             <div style={{ marginBottom: '12px' }}>
@@ -378,7 +385,7 @@ const handleRemoveImage = (index: number) => {
                 />
               </label>
               <p style={{ fontSize: '12px', color: '#43474d', marginTop: '8px' }}>
-                Formatos: JPG, PNG, WebP
+                Formatos: JPG, PNG, WebP. Puedes seleccionar varios archivos a la vez.
               </p>
             </div>
 

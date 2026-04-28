@@ -35,8 +35,7 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [added, setAdded] = useState(false);
 
-  const primaryImage = images.find(img => img.is_primary) || images[0];
-  const displayImage = primaryImage?.image_url || 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?w=400';
+  const displayImage = images[currentImageIndex]?.image_url || images[0]?.image_url || 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?w=400';
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -75,23 +74,26 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
             <button
               onClick={(e) => {
                 e.stopPropagation();
-                setCurrentImageIndex(prev => (prev - 1 + images.length) % images.length);
+                setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
               }}
               style={{
                 position: 'absolute',
                 left: '8px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: '32px',
-                height: '32px',
+                width: '28px',
+                height: '28px',
                 borderRadius: '50%',
-                background: 'rgba(255,255,255,0.9)',
-                border: 'none',
+                background: 'rgba(255,255,255,0.95)',
+                border: '1px solid #c3c6ce',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
                 zIndex: 2,
+                fontSize: '18px',
+                fontWeight: 700,
+                color: '#0d2b45',
               }}
             >
               ‹
@@ -106,16 +108,19 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
                 right: '8px',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: '32px',
-                height: '32px',
+                width: '28px',
+                height: '28px',
                 borderRadius: '50%',
-                background: 'rgba(255,255,255,0.9)',
-                border: 'none',
+                background: 'rgba(255,255,255,0.95)',
+                border: '1px solid #c3c6ce',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 cursor: 'pointer',
                 zIndex: 2,
+                fontSize: '18px',
+                fontWeight: 700,
+                color: '#0d2b45',
               }}
             >
               ›
@@ -126,16 +131,16 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
               left: '50%',
               transform: 'translateX(-50%)',
               display: 'flex',
-              gap: '4px',
+              gap: '6px',
             }}>
               {images.map((_, idx) => (
                 <div
                   key={idx}
                   style={{
-                    width: '6px',
-                    height: '6px',
+                    width: '8px',
+                    height: '8px',
                     borderRadius: '50%',
-                    background: idx === currentImageIndex ? '#0d2b45' : 'rgba(255,255,255,0.5)',
+                    background: idx === currentImageIndex ? '#0d2b45' : 'rgba(255,255,255,0.6)',
                   }}
                 />
               ))}
