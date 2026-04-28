@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Image from 'next/image';
-import { COLOMBIA_DEPARTMENTS, getCheapestShipping, validateAddress, formatCOP } from '@/lib/colombia';
+import { COLOMBIA_DEPARTMENTS, validateAddress, formatCOP } from '@/lib/colombia';
 
 interface ProductImage {
   id: number;
@@ -33,7 +33,8 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
   const [selectedCity, setSelectedCity] = useState('');
   const [address, setAddress] = useState('');
   const [addressError, setAddressError] = useState('');
-  const [shippingInfo, setShippingInfo] = useState<{ price: number; carrier: string; days: string } | null>(null);
+  const [shippingInfo, setShippingInfo] = useState<{ servientrega: { price: number; days: string }; interrapidisimo: { price: number; days: string } } | null>(null);
+  const [selectedCarrier, setSelectedCarrier] = useState<'servientrega' | 'interrapidisimo'>('interrapidisimo');
 
   useEffect(() => {
     if (isOpen) {
@@ -71,12 +72,22 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
       return;
     }
 
-    const shipping = getCheapestShipping(selectedDepartment);
-    setShippingInfo(shipping);
+    const dept = COLOMBIA_DEPARTMENTS.find(d => d.id === selectedDepartment);
+    if (dept) {
+      setShippingInfo({
+        servientrega: { price: dept.shipping.servientrega, days: dept.shipping.days },
+        interrapidisimo: { price: dept.shipping.interrapidisimo, days: dept.shipping.days },
+      });
+    }
     setStep('shipping');
   };
 
   const handleWhatsApp = () => {
+    if (!shippingInfo) return;
+    
+    const carrierName = selectedCarrier === 'servientrega' ? 'Servientrega' : 'Interrapidisimo';
+    const carrierData = shippingInfo[selectedCarrier];
+    
     const message = `🛒 Nuevo Pedido - La Casa de Pesca
 
 *Producto:*
@@ -86,14 +97,14 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
 📦 Detalles de Envío
 📍 Dirección: ${address}
 🏙️ Ciudad: ${selectedCity}, ${selectedDeptData?.name}
-🚚 Transportadora: ${shippingInfo?.carrier}
-⏱️ Tiempo: ${shippingInfo?.days}
+🚚 Transportadora: ${carrierName}
+⏱️ Tiempo: ${carrierData.days}
 ━━━━━━━━━━━━━━━━━━━━
 
 💰 Producto: ${formatCOP(product.price)}
-📬 Envío: ${formatCOP(shippingInfo?.price || 0)}
+📬 Envío: ${formatCOP(carrierData.price)}
 ━━━━━━━━━━━━━━━━━━━━
-✨ TOTAL: ${formatCOP(product.price + (shippingInfo?.price || 0))}
+✨ TOTAL: ${formatCOP(product.price + carrierData.price)}
 
 ¡Hola! Quiero hacer este pedido. 📱`;
 
@@ -335,7 +346,7 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
                   </div>
                   <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                     <span style={{ color: '#43474d' }}>Envío:</span>
-                    <span style={{ fontWeight: 600 }}>{formatCOP(shippingInfo.price)}</span>
+                    <span style={{ fontWeight: 600 }}>{formatCOP(shippingInfo?.[selectedCarrier]?.price || 0)}</span>
                   </div>
                   <div style={{ 
                     display: 'flex', 
@@ -351,11 +362,84 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
                       fontSize: '18px',
                       color: '#52652a',
                     }}>
-                      {formatCOP(product.price + shippingInfo.price)}
+                      {formatCOP(product.price + (shippingInfo?.[selectedCarrier]?.price || 0))}
                     </span>
                   </div>
                 </div>
               </div>
+
+              {shippingInfo && (
+                <div style={{
+                  background: '#f1eee7',
+                  borderRadius: '8px',
+                  padding: '16px',
+                  marginBottom: '24px',
+                }}>
+                  <h3 style={{
+                    fontFamily: "'Epilogue', sans-serif",
+                    fontSize: '14px',
+                    fontWeight: 700,
+                    marginBottom: '12px',
+                    color: '#0d2b45',
+                  }}>
+                    Selecciona Transportadora
+                  </h3>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                    <label style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '12px',
+                      background: selectedCarrier === 'servientrega' ? '#d4eca2' : '#ffffff',
+                      borderRadius: '8px',
+                      border: '2px solid',
+                      borderColor: selectedCarrier === 'servientrega' ? '#52652a' : '#c3c6ce',
+                      cursor: 'pointer',
+                    }}>
+                      <input
+                        type="radio"
+                        name="carrier"
+                        value="servientrega"
+                        checked={selectedCarrier === 'servientrega'}
+                        onChange={() => setSelectedCarrier('servientrega')}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, color: '#0d2b45' }}>Servientrega</div>
+                        <div style={{ fontSize: '12px', color: '#43474d' }}>{shippingInfo.servientrega.days}</div>
+                      </div>
+                      <div style={{ fontWeight: 700, color: '#0d2b45' }}>
+                        {formatCOP(shippingInfo.servientrega.price)}
+                      </div>
+                    </label>
+                    <label style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      padding: '12px',
+                      background: selectedCarrier === 'interrapidisimo' ? '#d4eca2' : '#ffffff',
+                      borderRadius: '8px',
+                      border: '2px solid',
+                      borderColor: selectedCarrier === 'interrapidisimo' ? '#52652a' : '#c3c6ce',
+                      cursor: 'pointer',
+                    }}>
+                      <input
+                        type="radio"
+                        name="carrier"
+                        value="interrapidisimo"
+                        checked={selectedCarrier === 'interrapidisimo'}
+                        onChange={() => setSelectedCarrier('interrapidisimo')}
+                      />
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontWeight: 600, color: '#0d2b45' }}>Interrapidisimo</div>
+                        <div style={{ fontSize: '12px', color: '#43474d' }}>{shippingInfo.interrapidisimo.days}</div>
+                      </div>
+                      <div style={{ fontWeight: 700, color: '#0d2b45' }}>
+                        {formatCOP(shippingInfo.interrapidisimo.price)}
+                      </div>
+                    </label>
+                  </div>
+                </div>
+              )}
 
               <div style={{
                 background: '#f1eee7',
@@ -375,8 +459,8 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
                 <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px' }}>
                   <p><strong>📍 Dirección:</strong> {address}</p>
                   <p><strong>🏙️ Ciudad:</strong> {selectedCity}, {selectedDeptData?.name}</p>
-                  <p><strong>🚚 Transportadora:</strong> {shippingInfo.carrier}</p>
-                  <p><strong>⏱️ Tiempo de entrega:</strong> {shippingInfo.days}</p>
+                  <p><strong>🚚 Transportadora:</strong> {selectedCarrier === 'servientrega' ? 'Servientrega' : 'Interrapidisimo'}</p>
+                  <p><strong>⏱️ Tiempo de entrega:</strong> {shippingInfo?.[selectedCarrier]?.days}</p>
                 </div>
               </div>
 
