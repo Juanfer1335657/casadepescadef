@@ -5,6 +5,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import PurchaseModal from '@/components/PurchaseModal';
+import ImageModal from '@/components/ImageModal';
 
 interface ProductImage {
   id: number;
@@ -28,6 +29,8 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewImageProduct, setViewImageProduct] = useState<Product | null>(null);
+  const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -59,6 +62,11 @@ export default function Home() {
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedProduct(null);
+  };
+
+  const handleViewImage = (product: Product) => {
+    setViewImageProduct(product);
+    setIsImageModalOpen(true);
   };
 
   return (
@@ -121,6 +129,7 @@ export default function Home() {
                   key={product.id}
                   product={product}
                   onOpenModal={handleOpenModal}
+                  onViewImage={handleViewImage}
                 />
               ))}
             </div>
@@ -134,6 +143,12 @@ export default function Home() {
         product={selectedProduct}
         isOpen={isModalOpen}
         onClose={handleCloseModal}
+      />
+
+      <ImageModal
+        product={viewImageProduct}
+        isOpen={isImageModalOpen}
+        onClose={() => setIsImageModalOpen(false)}
       />
     </div>
   );

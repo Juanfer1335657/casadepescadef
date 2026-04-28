@@ -25,12 +25,13 @@ interface Product {
 interface ProductCardProps {
   product: Product;
   onOpenModal?: (product: Product) => void;
+  onViewImage?: (product: Product) => void;
   onEdit?: (product: Product) => void;
   onDelete?: (id: number) => void;
   isAdmin?: boolean;
 }
 
-export default function ProductCard({ product, onOpenModal, onEdit, onDelete, isAdmin = false }: ProductCardProps) {
+export default function ProductCard({ product, onOpenModal, onViewImage, onEdit, onDelete, isAdmin = false }: ProductCardProps) {
   const { addItem } = useCart();
   const images = product.images || [];
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -58,9 +59,15 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
           width: '100%', 
           aspectRatio: '1',
           background: '#f1eee7',
-          cursor: onOpenModal ? 'pointer' : 'default',
+          cursor: 'pointer',
         }}
-        onClick={() => onOpenModal?.(product)}
+        onClick={() => {
+          if (onViewImage) {
+            onViewImage(product);
+          } else {
+            onOpenModal?.(product);
+          }
+        }}
       >
         <Image
           src={displayImage}
@@ -69,7 +76,7 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
           style={{ objectFit: 'cover' }}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-        
+
         {images.length > 1 && (
           <>
             <button
@@ -241,20 +248,22 @@ export default function ProductCard({ product, onOpenModal, onEdit, onDelete, is
             </div>
           ) : (
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <button
-                onClick={() => onOpenModal?.(product)}
-                style={{
-                  padding: '8px 12px',
-                  background: '#f1eee7',
-                  color: '#0d2b45',
-                  borderRadius: '4px',
-                  fontSize: '12px',
-                  fontWeight: 600,
-                  border: '1px solid #c3c6ce',
-                }}
-              >
-                Info
-              </button>
+              {onOpenModal && (
+                <button
+                  onClick={() => onOpenModal(product)}
+                  style={{
+                    padding: '8px 12px',
+                    background: '#f1eee7',
+                    color: '#0d2b45',
+                    borderRadius: '4px',
+                    fontSize: '12px',
+                    fontWeight: 600,
+                    border: '1px solid #c3c6ce',
+                  }}
+                >
+                  Info
+                </button>
+              )}
               <button
                 onClick={handleAddToCart}
                 style={{

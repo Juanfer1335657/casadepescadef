@@ -34,6 +34,7 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
   const [selectedCity, setSelectedCity] = useState('');
   const [address, setAddress] = useState('');
   const [addressError, setAddressError] = useState('');
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [shippingInfo, setShippingInfo] = useState<{ servientrega: { price: number; days: string }; interrapidisimo: { price: number; days: string } } | null>(null);
   const [selectedCarrier, setSelectedCarrier] = useState<'servientrega' | 'interrapidisimo'>('interrapidisimo');
 
@@ -45,14 +46,14 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
       setAddress('');
       setAddressError('');
       setShippingInfo(null);
+      setCurrentImageIndex(0);
     }
   }, [isOpen]);
 
   if (!isOpen || !product) return null;
 
-  const primaryImage = product.images?.find(img => img.is_primary) || product.images?.[0];
-  const displayImage = primaryImage?.image_url || 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?w=400';
-
+  const images = product.images || [];
+  const displayImage = images[currentImageIndex]?.image_url || 'https://images.unsplash.com/photo-1516962215378-7fa2e137ae93?w=400';
   const selectedDeptData = COLOMBIA_DEPARTMENTS.find(d => d.id === selectedDepartment);
 
   const handleCalculateShipping = () => {
@@ -87,12 +88,13 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
     if (!shippingInfo) return;
     
     const carrierName = selectedCarrier === 'servientrega' ? 'Servientrega' : 'Interrapidisimo';
-    const carrierData = shippingInfo[selectedCarrier];
+    const carrierData = shippingInfo?.[selectedCarrier];
     
     const message = `🛒 Nuevo Pedido - La Casa De La Pesca del Llano
 
 *Producto:*
 • ${product.name} - ${formatCOP(product.price)}
+• Unidades: ${product.units}
 
 ━━━━━━━━━━━━━━━━━━━━
 📦 Detalles de Envío
@@ -112,6 +114,7 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
     const encodedMessage = encodeURIComponent(message);
     const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
     window.open(whatsappUrl, '_blank');
+    onClose();
   };
 
   return (
@@ -124,15 +127,15 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
         alignItems: 'center',
         justifyContent: 'center',
         zIndex: 1000,
-        padding: '16px',
+        padding: '20px',
       }}
       onClick={onClose}
     >
       <div 
         style={{
           background: '#ffffff',
-          borderRadius: '12px',
-          maxWidth: '500px',
+          borderRadius: '16px',
+          maxWidth: '700px',
           width: '100%',
           maxHeight: '90vh',
           overflow: 'auto',
@@ -140,352 +143,343 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
         }}
         onClick={e => e.stopPropagation()}
       >
-        <div style={{
-          padding: '24px',
-          borderBottom: '1px solid #c3c6ce',
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-        }}>
+        <button
+          onClick={onClose}
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            background: 'rgba(255,255,255,0.9)',
+            border: 'none',
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            fontSize: '20px',
+            cursor: 'pointer',
+            zIndex: 10,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          ×
+        </button>
+
+        <div style={{ padding: '32px' }}>
           <h2 style={{
             fontFamily: "'Epilogue', sans-serif",
-            fontSize: '20px',
+            fontSize: '24px',
             fontWeight: 700,
             color: '#0d2b45',
+            marginBottom: '24px',
           }}>
             {step === 'product' ? 'Confirmar Compra' : 'Resumen del Pedido'}
           </h2>
-          <button
-            onClick={onClose}
-            style={{
-              background: 'none',
-              border: 'none',
-              fontSize: '24px',
-              cursor: 'pointer',
-              color: '#43474d',
-              padding: '4px',
-            }}
-          >
-            ×
-          </button>
-        </div>
 
-        <div style={{ padding: '24px' }}>
-          {step === 'product' && (
+          {step === 'product' ? (
             <>
               <div style={{
-                display: 'flex',
-                gap: '16px',
-                marginBottom: '24px',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '32px',
               }}>
-                <div style={{
-                  position: 'relative',
-                  width: '100px',
-                  height: '100px',
-                  borderRadius: '8px',
-                  overflow: 'hidden',
-                  flexShrink: 0,
-                }}>
-                  <Image
-                    src={displayImage}
-                    alt={product.name}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                  />
+                <div>
+                  <div style={{
+                    position: 'relative',
+                    width: '100%',
+                    aspectRatio: '1',
+                    borderRadius: '12px',
+                    overflow: 'hidden',
+                    background: '#f1eee7',
+                    marginBottom: '16px',
+                  }}>
+                    <Image
+                      src={displayImage}
+                      alt={product.name}
+                      fill
+                      style={{ objectFit: 'cover' }}
+                    />
+                    {images.length > 1 && (
+                      <>
+                        <button
+                          onClick={() => setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1)}
+                          style={{
+                            position: 'absolute',
+                            left: '8px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            background: 'rgba(255,255,255,0.9)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '18px',
+                          }}
+                        >
+                          ‹
+                        </button>
+                        <button
+                          onClick={() => setCurrentImageIndex(prev => (prev + 1) % images.length)}
+                          style={{
+                            position: 'absolute',
+                            right: '8px',
+                            top: '50%',
+                            transform: 'translateY(-50%)',
+                            width: '32px',
+                            height: '32px',
+                            borderRadius: '50%',
+                            background: 'rgba(255,255,255,0.9)',
+                            border: 'none',
+                            cursor: 'pointer',
+                            fontSize: '18px',
+                          }}
+                        >
+                          ›
+                        </button>
+                      </>
+                    )}
+                  </div>
+                  
+                  {images.length > 1 && (
+                    <div style={{
+                      display: 'flex',
+                      gap: '8px',
+                      justifyContent: 'center',
+                    }}>
+                      {images.map((_, idx) => (
+                        <div
+                          key={idx}
+                          onClick={() => setCurrentImageIndex(idx)}
+                          style={{
+                            width: '10px',
+                            height: '10px',
+                            borderRadius: '50%',
+                            background: idx === currentImageIndex ? '#0d2b45' : '#c3c6ce',
+                            cursor: 'pointer',
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
+
                 <div>
                   <h3 style={{
                     fontFamily: "'Epilogue', sans-serif",
-                    fontSize: '16px',
+                    fontSize: '22px',
                     fontWeight: 700,
-                    marginBottom: '8px',
+                    color: '#0d2b45',
+                    marginBottom: '12px',
+                    lineHeight: 1.3,
                   }}>
                     {product.name}
                   </h3>
+
+                  {product.category && (
+                    <span style={{
+                      fontSize: '12px',
+                      fontWeight: 600,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      color: '#52652a',
+                      background: '#d4eca2',
+                      padding: '4px 10px',
+                      borderRadius: '4px',
+                      display: 'inline-block',
+                      marginBottom: '12px',
+                    }}>
+                      {product.category}
+                    </span>
+                  )}
+
                   {product.description && (
                     <p style={{
                       fontSize: '14px',
                       color: '#43474d',
-                      marginBottom: '8px',
+                      marginBottom: '16px',
+                      lineHeight: 1.6,
                     }}>
                       {product.description}
                     </p>
                   )}
-                  <span style={{
-                    fontFamily: "'Epilogue', sans-serif",
-                    fontSize: '18px',
+
+                  <div style={{
+                    fontSize: '28px',
                     fontWeight: 700,
                     color: '#0d2b45',
+                    marginBottom: '8px',
                   }}>
                     {formatCOP(product.price)}
-                  </span>
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  marginBottom: '8px',
-                  color: '#1c1c18',
-                }}>
-                  Departamento *
-                </label>
-                <select
-                  value={selectedDepartment}
-                  onChange={e => {
-                    setSelectedDepartment(e.target.value);
-                    setSelectedCity('');
-                  }}
-                  className="input-field"
-                  style={{ padding: '12px' }}
-                >
-                  <option value="">Selecciona un departamento</option>
-                  {COLOMBIA_DEPARTMENTS.map(dept => (
-                    <option key={dept.id} value={dept.id}>
-                      {dept.name}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              {selectedDeptData && (
-                <div style={{ marginBottom: '16px' }}>
-                  <label style={{
-                    display: 'block',
-                    fontSize: '14px',
-                    fontWeight: 600,
-                    marginBottom: '8px',
-                    color: '#1c1c18',
-                  }}>
-                    Ciudad *
-                  </label>
-                  <select
-                    value={selectedCity}
-                    onChange={e => setSelectedCity(e.target.value)}
-                    className="input-field"
-                    style={{ padding: '12px' }}
-                  >
-                    <option value="">Selecciona una ciudad</option>
-                    {selectedDeptData.cities.map(city => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              )}
-
-              <div style={{ marginBottom: '24px' }}>
-                <label style={{
-                  display: 'block',
-                  fontSize: '14px',
-                  fontWeight: 600,
-                  marginBottom: '8px',
-                  color: '#1c1c18',
-                }}>
-                  Dirección *
-                </label>
-                <input
-                  type="text"
-                  value={address}
-                  onChange={e => {
-                    setAddress(e.target.value);
-                    setAddressError('');
-                  }}
-                  placeholder="Ej: Cra 15 #45-67, Apto 301"
-                  className="input-field"
-                  style={{ padding: '12px' }}
-                />
-                {addressError && (
-                  <p style={{ color: '#ba1a1a', fontSize: '12px', marginTop: '4px' }}>
-                    {addressError}
-                  </p>
-                )}
-                <p style={{ color: '#43474d', fontSize: '12px', marginTop: '4px' }}>
-                  Formatos válidos: Cra, Calle, Av, Transversal, Diagonal
-                </p>
-              </div>
-
-              <button
-                onClick={handleCalculateShipping}
-                className="btn-primary"
-                style={{ width: '100%' }}
-              >
-                Calcular Envío
-              </button>
-            </>
-          )}
-
-          {step === 'shipping' && shippingInfo && (
-            <>
-              <div style={{
-                background: '#f1eee7',
-                borderRadius: '8px',
-                padding: '16px',
-                marginBottom: '24px',
-              }}>
-                <h3 style={{
-                  fontFamily: "'Epilogue', sans-serif",
-                  fontSize: '16px',
-                  fontWeight: 700,
-                  marginBottom: '16px',
-                  color: '#0d2b45',
-                }}>
-                  Resumen del Pedido
-                </h3>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#43474d' }}>Producto:</span>
-                    <span style={{ fontWeight: 600 }}>{product.name}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                    <span style={{ color: '#43474d' }}>Precio:</span>
+
+                  {product.units > 0 && (
+                    <p style={{
+                      fontSize: '14px',
+                      color: product.units <= 2 ? '#ba1a1a' : '#52652a',
+                      fontWeight: 600,
+                      marginBottom: '24px',
+                    }}>
+                      {product.units} {product.units === 1 ? 'unidad' : 'unidades'} disponible{product.units > 1 ? 's' : ''}
+                    </p>
+                  )}
+
+                  <div style={{ marginTop: '24px', padding: '20px', background: '#f1eee7', borderRadius: '12px' }}>
+                    <h4 style={{
+                      fontSize: '14px',
+                      fontWeight: 600,
+                      color: '#0d2b45',
+                      marginBottom: '16px',
+                    }}>
+                      📦 Datos de Envío
+                    </h4>
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
+                        Departamento *
+                      </label>
+                      <select
+                        value={selectedDepartment}
+                        onChange={e => { setSelectedDepartment(e.target.value); setSelectedCity(''); }}
+                        style={{ width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #c3c6ce', fontSize: '14px' }}
+                      >
+                        <option value="">Selecciona</option>
+                        {COLOMBIA_DEPARTMENTS.map(dept => (
+                          <option key={dept.id} value={dept.id}>{dept.name}</option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {selectedDeptData && (
+                      <div style={{ marginBottom: '16px' }}>
+                        <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
+                          Ciudad *
+                        </label>
+                        <select
+                          value={selectedCity}
+                          onChange={e => setSelectedCity(e.target.value)}
+                          style={{ width: '100%', padding: '12px', borderRadius: '6px', border: '1px solid #c3c6ce', fontSize: '14px' }}
+                        >
+                          <option value="">Selecciona</option>
+                          {selectedDeptData.cities.map(city => (
+                            <option key={city} value={city}>{city}</option>
+                          ))}
+                        </select>
+                      </div>
+                    )}
+
+                    <div style={{ marginBottom: '16px' }}>
+                      <label style={{ display: 'block', fontSize: '13px', fontWeight: 600, marginBottom: '6px' }}>
+                        Dirección *
+                      </label>
+                      <input
+                        type="text"
+                        value={address}
+                        onChange={e => { setAddress(e.target.value); setAddressError(''); }}
+                        placeholder="Cra 12 #34-56"
+                        style={{ width: '100%', padding: '12px', borderRadius: '6px', border: `1px solid ${addressError ? '#ba1a1a' : '#c3c6ce'}`, fontSize: '14px' }}
+                      />
+                      {addressError && <p style={{ color: '#ba1a1a', fontSize: '12px', marginTop: '4px' }}>{addressError}</p>}
+                    </div>
+
+                    <button
+                      onClick={handleCalculateShipping}
+                      style={{
+                        width: '100%',
+                        padding: '14px',
+                        background: '#0d2b45',
+                        color: '#ffffff',
+                        borderRadius: '6px',
+                        fontWeight: 700,
+                        fontSize: '15px',
+                        border: 'none',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      Calcular Envío
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div style={{ marginBottom: '24px', padding: '20px', background: '#f1eee7', borderRadius: '12px' }}>
+                <h4 style={{ fontSize: '14px', fontWeight: 600, color: '#0d2b45', marginBottom: '12px' }}>
+                  Selecciona Transportadora
+                </h4>
+                
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px',
+                  background: selectedCarrier === 'servientrega' ? '#d4eca2' : '#ffffff',
+                  borderRadius: '8px',
+                  border: `2px solid ${selectedCarrier === 'servientrega' ? '#52652a' : '#c3c6ce'}`,
+                  cursor: 'pointer',
+                  marginBottom: '10px',
+                }}>
+                  <input type="radio" name="carrier" checked={selectedCarrier === 'servientrega'} onChange={() => setSelectedCarrier('servientrega')} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, color: '#0d2b45' }}>Servientrega</div>
+                    <div style={{ fontSize: '12px', color: '#43474d' }}>{shippingInfo?.servientrega.days}</div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#0d2b45', fontSize: '16px' }}>
+                    {formatCOP(shippingInfo?.servientrega.price || 0)}
+                  </div>
+                </label>
+                
+                <label style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '12px',
+                  padding: '14px',
+                  background: selectedCarrier === 'interrapidisimo' ? '#d4eca2' : '#ffffff',
+                  borderRadius: '8px',
+                  border: `2px solid ${selectedCarrier === 'interrapidisimo' ? '#52652a' : '#c3c6ce'}`,
+                  cursor: 'pointer',
+                  marginBottom: '20px',
+                }}>
+                  <input type="radio" name="carrier" checked={selectedCarrier === 'interrapidisimo'} onChange={() => setSelectedCarrier('interrapidisimo')} />
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 600, color: '#0d2b45' }}>Interrapidisimo</div>
+                    <div style={{ fontSize: '12px', color: '#43474d' }}>{shippingInfo?.interrapidisimo.days}</div>
+                  </div>
+                  <div style={{ fontWeight: 700, color: '#0d2b45', fontSize: '16px' }}>
+                    {formatCOP(shippingInfo?.interrapidisimo.price || 0)}
+                  </div>
+                </label>
+
+                <div style={{ background: '#ffffff', borderRadius: '8px', padding: '16px', marginBottom: '20px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
+                    <span style={{ color: '#43474d' }}>Producto:</span>
                     <span style={{ fontWeight: 600 }}>{formatCOP(product.price)}</span>
                   </div>
-                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
                     <span style={{ color: '#43474d' }}>Envío:</span>
                     <span style={{ fontWeight: 600 }}>{formatCOP(shippingInfo?.[selectedCarrier]?.price || 0)}</span>
                   </div>
-                  <div style={{ 
-                    display: 'flex', 
-                    justifyContent: 'space-between',
-                    borderTop: '1px solid #c3c6ce',
-                    paddingTop: '12px',
-                    marginTop: '4px',
-                  }}>
-                    <span style={{ fontWeight: 700, color: '#0d2b45' }}>TOTAL:</span>
-                    <span style={{ 
-                      fontWeight: 700, 
-                      fontFamily: "'Epilogue', sans-serif",
-                      fontSize: '18px',
-                      color: '#52652a',
-                    }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', borderTop: '1px solid #c3c6ce', paddingTop: '8px' }}>
+                    <span style={{ fontWeight: 700, fontSize: '16px' }}>TOTAL:</span>
+                    <span style={{ fontWeight: 700, fontSize: '18px', color: '#52652a' }}>
                       {formatCOP(product.price + (shippingInfo?.[selectedCarrier]?.price || 0))}
                     </span>
                   </div>
                 </div>
-              </div>
 
-              {shippingInfo && (
-                <div style={{
-                  background: '#f1eee7',
-                  borderRadius: '8px',
-                  padding: '16px',
-                  marginBottom: '24px',
-                }}>
-                  <h3 style={{
-                    fontFamily: "'Epilogue', sans-serif",
-                    fontSize: '14px',
-                    fontWeight: 700,
-                    marginBottom: '12px',
-                    color: '#0d2b45',
-                  }}>
-                    Selecciona Transportadora
-                  </h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <label style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '12px',
-                      background: selectedCarrier === 'servientrega' ? '#d4eca2' : '#ffffff',
-                      borderRadius: '8px',
-                      border: '2px solid',
-                      borderColor: selectedCarrier === 'servientrega' ? '#52652a' : '#c3c6ce',
-                      cursor: 'pointer',
-                    }}>
-                      <input
-                        type="radio"
-                        name="carrier"
-                        value="servientrega"
-                        checked={selectedCarrier === 'servientrega'}
-                        onChange={() => setSelectedCarrier('servientrega')}
-                      />
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, color: '#0d2b45' }}>Servientrega</div>
-                        <div style={{ fontSize: '12px', color: '#43474d' }}>{shippingInfo.servientrega.days}</div>
-                      </div>
-                      <div style={{ fontWeight: 700, color: '#0d2b45' }}>
-                        {formatCOP(shippingInfo.servientrega.price)}
-                      </div>
-                    </label>
-                    <label style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '12px',
-                      padding: '12px',
-                      background: selectedCarrier === 'interrapidisimo' ? '#d4eca2' : '#ffffff',
-                      borderRadius: '8px',
-                      border: '2px solid',
-                      borderColor: selectedCarrier === 'interrapidisimo' ? '#52652a' : '#c3c6ce',
-                      cursor: 'pointer',
-                    }}>
-                      <input
-                        type="radio"
-                        name="carrier"
-                        value="interrapidisimo"
-                        checked={selectedCarrier === 'interrapidisimo'}
-                        onChange={() => setSelectedCarrier('interrapidisimo')}
-                      />
-                      <div style={{ flex: 1 }}>
-                        <div style={{ fontWeight: 600, color: '#0d2b45' }}>Interrapidisimo</div>
-                        <div style={{ fontSize: '12px', color: '#43474d' }}>{shippingInfo.interrapidisimo.days}</div>
-                      </div>
-                      <div style={{ fontWeight: 700, color: '#0d2b45' }}>
-                        {formatCOP(shippingInfo.interrapidisimo.price)}
-                      </div>
-                    </label>
-                  </div>
-                </div>
-              )}
-
-              <div style={{
-                background: '#f1eee7',
-                borderRadius: '8px',
-                padding: '16px',
-                marginBottom: '24px',
-              }}>
-                <h3 style={{
-                  fontFamily: "'Epilogue', sans-serif",
-                  fontSize: '14px',
-                  fontWeight: 700,
-                  marginBottom: '12px',
-                  color: '#0d2b45',
-                }}>
-                  Información de Envío
-                </h3>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '14px' }}>
-                  <p><strong>📍 Dirección:</strong> {address}</p>
-                  <p><strong>🏙️ Ciudad:</strong> {selectedCity}, {selectedDeptData?.name}</p>
-                  <p><strong>🚚 Transportadora:</strong> {selectedCarrier === 'servientrega' ? 'Servientrega' : 'Interrapidisimo'}</p>
-                  <p><strong>⏱️ Tiempo de entrega:</strong> {shippingInfo?.[selectedCarrier]?.days}</p>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '12px' }}>
-                <button
-                  onClick={() => setStep('product')}
-                  className="btn-primary"
-                  style={{ 
-                    flex: 1,
-                    background: '#43474d',
-                  }}
-                >
-                  Volver
-                </button>
                 <button
                   onClick={handleWhatsApp}
                   style={{
-                    flex: 1,
+                    width: '100%',
+                    padding: '16px',
                     background: '#25D366',
                     color: '#ffffff',
-                    padding: '12px 24px',
-                    borderRadius: '4px',
-                    fontWeight: 600,
-                    fontSize: '14px',
+                    borderRadius: '8px',
+                    fontWeight: 700,
+                    fontSize: '16px',
+                    border: 'none',
+                    cursor: 'pointer',
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
@@ -498,6 +492,22 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
                   Comprar por WhatsApp
                 </button>
               </div>
+
+              <button
+                onClick={() => setStep('product')}
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  background: 'transparent',
+                  color: '#43474d',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  border: '1px solid #c3c6ce',
+                  cursor: 'pointer',
+                }}
+              >
+                ← Volver
+              </button>
             </>
           )}
         </div>
