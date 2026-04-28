@@ -1,11 +1,29 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ProductCard from '@/components/ProductCard';
 import PurchaseModal from '@/components/PurchaseModal';
 import ImageModal from '@/components/ImageModal';
+
+const CATEGORIES = [
+  { value: 'Todos', label: 'Todos' },
+  { value: 'Cañas', label: 'Cañas' },
+  { value: 'Reeles', label: 'Reeles' },
+  { value: 'Señuelos', label: 'Señuelos' },
+  { value: 'Anzuelos', label: 'Anzuelos' },
+  { value: 'Lineas', label: 'Líneas' },
+  { value: 'Accesorios', label: 'Accesorios' },
+  { value: 'Cajas', label: 'Cajas' },
+  { value: 'Chalecos', label: 'Chalecos' },
+  { value: 'Otros', label: 'Otros' },
+];
+
+const normalizeCategory = (cat: string | null): string => {
+  if (!cat) return '';
+  return cat.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim();
+};
 
 interface ProductImage {
   id: number;
@@ -31,6 +49,7 @@ export default function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [viewImageProduct, setViewImageProduct] = useState<Product | null>(null);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState('Todos');
 
   useEffect(() => {
     fetchProducts();
@@ -53,6 +72,12 @@ export default function Home() {
       setLoading(false);
     }
   };
+
+  const filteredProducts = useMemo(() => {
+    if (selectedCategory === 'Todos') return products;
+    const selectedNorm = normalizeCategory(selectedCategory);
+    return products.filter(p => normalizeCategory(p.category) === selectedNorm);
+  }, [products, selectedCategory]);
 
   const handleOpenModal = (product: Product) => {
     setSelectedProduct(product);
@@ -106,6 +131,41 @@ export default function Home() {
         <section style={{
           maxWidth: '1280px',
           margin: '0 auto',
+          padding: '0 16px 24px',
+          width: '100%',
+        }}>
+          <div style={{
+            display: 'flex',
+            gap: '8px',
+            flexWrap: 'wrap',
+            marginBottom: '24px',
+          }}>
+            {CATEGORIES.map((cat) => (
+              <button
+                key={cat.value}
+                onClick={() => setSelectedCategory(cat.value)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  border: '1px solid',
+                  fontSize: '13px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.2s',
+                  background: selectedCategory === cat.value ? '#0d2b45' : '#ffffff',
+                  color: selectedCategory === cat.value ? '#ffffff' : '#0d2b45',
+                  borderColor: selectedCategory === cat.value ? '#0d2b45' : '#c3c6ce',
+                }}
+              >
+                {cat.label}
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <section style={{
+          maxWidth: '1280px',
+          margin: '0 auto',
           padding: '0 16px 48px',
           width: '100%',
         }}>
@@ -113,10 +173,10 @@ export default function Home() {
             <div style={{ textAlign: 'center', padding: '48px' }}>
               <p>Cargando productos...</p>
             </div>
-          ) : products.length === 0 || !products ? (
+          ) : filteredProducts.length === 0 || !filteredProducts ? (
             <div style={{ textAlign: 'center', padding: '48px' }}>
-              <h2 style={{ marginBottom: '16px' }}>No hay productos disponibles</h2>
-              <p style={{ color: '#43474d' }}>Pronto tendremos nuevos artículos de pesca.</p>
+              <h2 style={{ marginBottom: '16px' }}>No hay productos en esta categoría</h2>
+              <p style={{ color: '#43474d' }}>Pronto tendremos nuevos artículos.</p>
             </div>
           ) : (
             <div style={{
@@ -124,7 +184,7 @@ export default function Home() {
               gridTemplateColumns: 'repeat(auto-fill, minmax(min(280px, 100%), 1fr))',
               gap: 'clamp(12px, 2vw, 24px)',
             }}>
-              {products.map((product) => (
+              {filteredProducts.map((product) => (
                 <ProductCard
                   key={product.id}
                   product={product}
