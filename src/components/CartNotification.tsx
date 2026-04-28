@@ -32,16 +32,17 @@ export default function CartNotification() {
     }}>
       <div style={{
         background: '#ffffff',
-        borderRadius: '12px',
-        padding: '16px 20px',
-        boxShadow: '0 4px 20px rgba(0,0,0,0.15)',
-        border: '2px solid #52652a',
-        maxWidth: '320px',
+        borderRadius: '16px',
+        padding: '24px',
+        boxShadow: '0 8px 30px rgba(0,0,0,0.2)',
+        border: '3px solid #52652a',
+        maxWidth: '400px',
+        width: '100%',
       }}>
-        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '12px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
           <div style={{
-            width: '40px',
-            height: '40px',
+            width: '56px',
+            height: '56px',
             background: '#d4eca2',
             borderRadius: '50%',
             display: 'flex',
@@ -49,64 +50,71 @@ export default function CartNotification() {
             justifyContent: 'center',
             flexShrink: 0,
           }}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52652a" strokeWidth="2">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#52652a" strokeWidth="2.5">
               <polyline points="20 6 9 17 4 12"/>
             </svg>
           </div>
-          <div style={{ flex: 1 }}>
+          <div>
             <p style={{
               fontFamily: "'Epilogue', sans-serif",
-              fontSize: '14px',
+              fontSize: '20px',
               fontWeight: 700,
               color: '#0d2b45',
               marginBottom: '4px',
             }}>
-              ¡Producto agregado!
+              ¡Agregado al carrito!
             </p>
             <p style={{
-              fontSize: '13px',
+              fontSize: '16px',
               color: '#43474d',
-              marginBottom: '12px',
             }}>
-              {lastItem.name} - {formatCOP(lastItem.price)}
+              {lastItem.name}
             </p>
-            <div style={{ display: 'flex', gap: '8px' }}>
-              <button
-                onClick={() => {
-                  setIsOpen(true);
-                  setShow(false);
-                }}
-                style={{
-                  flex: 1,
-                  padding: '10px 12px',
-                  background: '#0d2b45',
-                  color: '#ffffff',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                Ver Carrito
-              </button>
-              <button
-                onClick={() => setShow(false)}
-                style={{
-                  padding: '10px 12px',
-                  background: '#f1eee7',
-                  color: '#43474d',
-                  borderRadius: '6px',
-                  fontSize: '13px',
-                  fontWeight: 600,
-                  border: 'none',
-                  cursor: 'pointer',
-                }}
-              >
-                Continuar
-              </button>
-            </div>
           </div>
+        </div>
+        <p style={{
+          fontSize: '18px',
+          fontWeight: 700,
+          color: '#52652a',
+          marginBottom: '20px',
+        }}>
+          {formatCOP(lastItem.price)}
+        </p>
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <button
+            onClick={() => {
+              setIsOpen(true);
+              setShow(false);
+            }}
+            style={{
+              flex: 1,
+              padding: '14px 20px',
+              background: '#0d2b45',
+              color: '#ffffff',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: 700,
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            Ir al Carrito
+          </button>
+          <button
+            onClick={() => setShow(false)}
+            style={{
+              padding: '14px 20px',
+              background: '#f1eee7',
+              color: '#43474d',
+              borderRadius: '8px',
+              fontSize: '16px',
+              fontWeight: 600,
+              border: 'none',
+              cursor: 'pointer',
+            }}
+          >
+            Continuar
+          </button>
         </div>
       </div>
     </div>
