@@ -86,7 +86,7 @@ ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price
 ¡Hola! Quiero hacer este pedido. 📱`;
 
     const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/573015851969?text=${encodedMessage}`, '_blank');
+    window.open(`https://wa.me/573225908400?text=${encodedMessage}`, '_blank');
     setIsOpen(false);
   };
 

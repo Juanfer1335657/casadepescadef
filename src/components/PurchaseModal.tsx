@@ -27,7 +27,7 @@ interface PurchaseModalProps {
   whatsappNumber?: string;
 }
 
-export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber = '573015851969' }: PurchaseModalProps) {
+export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber = '573225908400' }: PurchaseModalProps) {
   const [step, setStep] = useState<'product' | 'shipping'>('product');
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
