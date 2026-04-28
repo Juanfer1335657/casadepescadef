@@ -1,5 +1,5 @@
 -- =============================================
--- Schema para La Casa de Pesca
+-- Schema para La Casa De La Pesca Villavicencio
 -- Neon PostgreSQL
 -- =============================================
 

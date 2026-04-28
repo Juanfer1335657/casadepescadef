@@ -65,7 +65,7 @@ export default function CartModal() {
     const shippingCost = carrierData.price;
     const total = totalPrice + shippingCost;
     
-    const message = `🛒 Nuevo Pedido - La Casa de Pesca
+    const message = `🛒 Nuevo Pedido - La Casa De La Pesca Villavicencio
 
 *Productos:*
 ${items.map(item => `• ${item.name} x${item.quantity} - ${formatCOP(item.price * item.quantity)}`).join('\n')}

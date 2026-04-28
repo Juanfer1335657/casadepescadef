@@ -79,7 +79,7 @@ export default function LoginPage() {
             ADMINISTRACIÓN
           </h1>
           <p style={{ color: '#43474d', fontSize: '14px' }}>
-            La Casa de Pesca
+            La Casa De La Pesca Villavicencio
           </p>
         </div>
 

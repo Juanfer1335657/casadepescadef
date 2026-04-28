@@ -88,7 +88,7 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
     const carrierName = selectedCarrier === 'servientrega' ? 'Servientrega' : 'Interrapidisimo';
     const carrierData = shippingInfo[selectedCarrier];
     
-    const message = `🛒 Nuevo Pedido - La Casa de Pesca
+    const message = `🛒 Nuevo Pedido - La Casa De La Pesca Villavicencio
 
 *Producto:*
 • ${product.name} - ${formatCOP(product.price)}

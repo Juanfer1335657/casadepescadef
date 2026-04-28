@@ -114,7 +114,7 @@ export default function InventarioPage() {
               fontWeight: 700,
               color: '#0d2b45',
             }}>
-              LA CASA DE PESCA - ADMIN
+              LA CASA DE LA PESCA VILLAVICENCIO - ADMIN
             </span>
           </Link>
 

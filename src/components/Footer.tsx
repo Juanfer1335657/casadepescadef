@@ -31,7 +31,7 @@ export default function Footer({ showAdminLink = false }: FooterProps) {
               fontWeight: 700,
               marginBottom: '12px',
             }}>
-              LA CASA DE PESCA
+              LA CASA DE LA PESCA VILLAVICENCIO
             </h3>
             <p style={{
               color: '#aec9ea',
