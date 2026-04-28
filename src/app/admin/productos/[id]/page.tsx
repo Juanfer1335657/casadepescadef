@@ -353,7 +353,7 @@ function NuevoProductoContent() {
                 <option value="">Selecciona una categoría</option>
                 <option value="Cañas">Cañas</option>
                 <option value="Reeles">Reeles</option>
-                <option value=" señuelos">Señuelos</option>
+                <option value="Señuelos">Señuelos</option>
                 <option value="Anzuelos">Anzuelos</option>
                 <option value="Lineas">Líneas</option>
                 <option value="Accesorios">Accesorios</option>

@@ -14,7 +14,7 @@ export default function Header({ showAdminLink = false }: HeaderProps) {
     <header style={{
       background: '#ffffff',
       borderBottom: '1px solid #c3c6ce',
-      padding: '12px 0',
+      padding: 'clamp(8px, 2vw, 12px) 0',
       position: 'sticky',
       top: 0,
       zIndex: 100,
@@ -22,21 +22,24 @@ export default function Header({ showAdminLink = false }: HeaderProps) {
       <div style={{
         maxWidth: '1280px',
         margin: '0 auto',
-        padding: '0 16px',
+        padding: '0 clamp(12px, 3vw, 16px)',
         width: '100%',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'space-between',
+        gap: '12px',
       }}>
         <Link href="/" style={{
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
+          gap: 'clamp(6px, 2vw, 10px)',
           textDecoration: 'none',
+          flex: 1,
+          minWidth: 0,
         }}>
           <div style={{
-            width: '36px',
-            height: '36px',
+            width: 'clamp(32px, 8vw, 36px)',
+            height: 'clamp(32px, 8vw, 36px)',
             background: '#0d2b45',
             borderRadius: '6px',
             display: 'flex',

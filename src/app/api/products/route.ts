@@ -116,14 +116,22 @@ export async function PUT(request: NextRequest) {
       WHERE id = ${id}
     `;
 
-    if (images && images.length > 0) {
-      await sql`DELETE FROM product_images WHERE product_id = ${id}`;
+    if (images !== undefined && Array.isArray(images)) {
+      const existingImages = await sql`SELECT image_url FROM product_images WHERE product_id = ${id}`;
+      const existingUrls = existingImages.map((img) => img.image_url as string);
+      const newUrls = images.filter((url: string) => url && url.trim());
       
-      for (let i = 0; i < images.length; i++) {
-        await sql`
-          INSERT INTO product_images (product_id, image_url, is_primary)
-          VALUES (${id}, ${images[i]}, ${i === 0})
-        `;
+      const hasChanges = JSON.stringify(existingUrls.sort()) !== JSON.stringify(newUrls.sort());
+      
+      if (hasChanges && newUrls.length > 0) {
+        await sql`DELETE FROM product_images WHERE product_id = ${id}`;
+        
+        for (let i = 0; i < newUrls.length; i++) {
+          await sql`
+            INSERT INTO product_images (product_id, image_url, is_primary)
+            VALUES (${id}, ${newUrls[i]}, ${i === 0})
+          `;
+        }
       }
     }
 
