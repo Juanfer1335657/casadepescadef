@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, Suspense } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 
 interface ProductImage {
@@ -23,8 +23,8 @@ interface Product {
 
 function NuevoProductoContent() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const editId = searchParams.get('id');
+  const params = useParams();
+  const editId = params.id as string;
   
   const [loading, setLoading] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
