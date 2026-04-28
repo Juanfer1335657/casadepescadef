@@ -51,6 +51,16 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
     setTimeout(() => setAdded(false), 1500);
   };
 
+  const handlePrevImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
+  };
+
+  const handleNextImage = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setCurrentImageIndex(prev => (prev + 1) % images.length);
+  };
+
   return (
     <div className="card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
       <div 
@@ -61,13 +71,7 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
           background: '#f1eee7',
           cursor: 'pointer',
         }}
-        onClick={() => {
-          if (onViewImage) {
-            onViewImage(product);
-          } else {
-            onOpenModal?.(product);
-          }
-        }}
+        onClick={() => onViewImage ? onViewImage(product) : onOpenModal?.(product)}
       >
         <Image
           src={displayImage}
@@ -76,14 +80,11 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
           style={{ objectFit: 'cover' }}
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
         />
-
+        
         {images.length > 1 && (
           <>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentImageIndex(prev => prev === 0 ? images.length - 1 : prev - 1);
-              }}
+              onClick={handlePrevImage}
               style={{
                 position: 'absolute',
                 left: '8px',
@@ -107,10 +108,7 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
               ‹
             </button>
             <button
-              onClick={(e) => {
-                e.stopPropagation();
-                setCurrentImageIndex(prev => (prev + 1) % images.length);
-              }}
+              onClick={handleNextImage}
               style={{
                 position: 'absolute',
                 right: '8px',
@@ -197,24 +195,32 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
           </p>
         )}
 
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 'auto' }}>
-          <span style={{
-            fontFamily: "'Epilogue', sans-serif",
-            fontSize: '20px',
-            fontWeight: 700,
-            color: '#0d2b45',
+        <div style={{ marginTop: 'auto', paddingTop: '12px' }}>
+          <div style={{
+            display: 'flex',
+            alignItems: 'baseline',
+            justifyContent: 'space-between',
+            marginBottom: '8px',
           }}>
-            {formatCOP(product.price)}
-          </span>
+            <span style={{
+              fontFamily: "'Epilogue', sans-serif",
+              fontSize: '22px',
+              fontWeight: 700,
+              color: '#0d2b45',
+            }}>
+              {formatCOP(product.price)}
+            </span>
+          </div>
           
           {product.units > 0 && (
-            <span style={{
-              fontSize: '11px',
+            <div style={{
+              fontSize: '12px',
               color: product.units <= 2 ? '#ba1a1a' : '#52652a',
               fontWeight: 600,
+              marginBottom: '12px',
             }}>
-              {product.units} {product.units === 1 ? 'unidad' : 'unidades'} disponible{product.units > 1 ? 's' : ''}
-            </span>
+              {product.units} {product.units === 1 ? 'unidad' : 'unidades'} en stock
+            </div>
           )}
 
           {isAdmin ? (
@@ -222,11 +228,12 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
               <button
                 onClick={() => onEdit?.(product)}
                 style={{
-                  padding: '8px 12px',
+                  flex: 1,
+                  padding: '10px',
                   background: '#0d2b45',
                   color: '#ffffff',
-                  borderRadius: '4px',
-                  fontSize: '12px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
                   fontWeight: 600,
                 }}
               >
@@ -235,11 +242,12 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
               <button
                 onClick={() => onDelete?.(product.id)}
                 style={{
-                  padding: '8px 12px',
+                  flex: 1,
+                  padding: '10px',
                   background: '#ba1a1a',
                   color: '#ffffff',
-                  borderRadius: '4px',
-                  fontSize: '12px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
                   fontWeight: 600,
                 }}
               >
@@ -247,33 +255,34 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
               </button>
             </div>
           ) : (
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <div style={{ display: 'flex', gap: '8px' }}>
               {onOpenModal && (
                 <button
                   onClick={() => onOpenModal(product)}
                   style={{
-                    padding: '8px 12px',
+                    flex: 1,
+                    padding: '10px',
                     background: '#f1eee7',
                     color: '#0d2b45',
-                    borderRadius: '4px',
-                    fontSize: '12px',
+                    borderRadius: '6px',
+                    fontSize: '13px',
                     fontWeight: 600,
                     border: '1px solid #c3c6ce',
                   }}
                 >
-                  Info
+                  Ver más
                 </button>
               )}
               <button
                 onClick={handleAddToCart}
                 style={{
-                  padding: '8px 16px',
+                  flex: 1,
+                  padding: '10px',
                   background: added ? '#52652a' : '#0d2b45',
                   color: '#ffffff',
-                  borderRadius: '4px',
-                  fontSize: '12px',
+                  borderRadius: '6px',
+                  fontSize: '13px',
                   fontWeight: 600,
-                  transition: 'background 0.2s',
                 }}
               >
                 {added ? '¡Agregado!' : 'Agregar'}
