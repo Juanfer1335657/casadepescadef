@@ -39,20 +39,11 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
       document.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
       
-      window.history.pushState({ modal: true }, '', window.location.href);
-      const handlePopState = () => {
-        onClose();
-      };
-      window.addEventListener('popstate', handlePopState);
-      
       return () => {
-        window.removeEventListener('popstate', handlePopState);
+        document.removeEventListener('keydown', handleKeyDown);
+        document.body.style.overflow = '';
       };
     }
-    return () => {
-      document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
-    };
   }, [isOpen, onClose]);
 
   useEffect(() => {
