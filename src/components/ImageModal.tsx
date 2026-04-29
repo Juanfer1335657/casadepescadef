@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 
 interface ProductImage {
@@ -28,6 +28,7 @@ interface ImageModalProps {
 
 export default function ImageModal({ product, isOpen, onClose }: ImageModalProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
+  const scrollPosition = useRef(0);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
@@ -36,8 +37,11 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
       }
     };
     if (isOpen) {
-      document.addEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = 'hidden';
+      scrollPosition.current = window.scrollY;
+      document.body.style.position = 'fixed';
+      document.body.style.top = `-${scrollPosition.current}px`;
+      document.body.style.width = '100%';
+      document.body.style.overflow = '';
       
       window.history.pushState({ modal: true }, '', window.location.href);
       const handlePopState = () => {
@@ -51,7 +55,10 @@ export default function ImageModal({ product, isOpen, onClose }: ImageModalProps
     }
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
-      document.body.style.overflow = '';
+      document.body.style.position = '';
+      document.body.style.top = '';
+      document.body.style.width = '';
+      window.scrollTo(0, scrollPosition.current);
     };
   }, [isOpen, onClose]);
 
