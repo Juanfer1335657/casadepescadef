@@ -104,7 +104,7 @@ export default function Header({ showAdminLink = false }: HeaderProps) {
               padding: '6px',
               position: 'relative',
             }}
-            aria- label="Ver carrito"
+            aria-label="Ver carrito"
           >
             <svg style={{ width: '100%', height: '100%' }} viewBox="0 0 24 24" fill="none" stroke="#0d2b45" strokeWidth="2">
               <circle cx="9" cy="21" r="1"/>
