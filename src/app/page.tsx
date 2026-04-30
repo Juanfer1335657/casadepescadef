@@ -110,7 +110,7 @@ export default function Home() {
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
       <Header showAdminLink />
       
-      <main style={{ flex: 1 }}>
+      <main style={{ flex: 1, paddingTop: 'clamp(56px, 14vw, 70px)' }}>
         <section style={{
           background: '#f1eee7',
           padding: 'clamp(24px, 5vw, 48px) 0 clamp(16px, 3vw, 32px)',
