@@ -29,7 +29,7 @@ export default function CartNotification() {
       right: 'clamp(12px, 4vw, 24px)',
       left: 'clamp(12px, 4vw, 24px)',
       zIndex: 1001,
-      animation: 'slideUp 0.3s ease-out',
+      animation: 'slideUp 0.3s ease- out',
       display: 'flex',
       justifyContent: 'center',
     }}>
