@@ -60,11 +60,9 @@ export default function Header({ showAdminLink = false }: HeaderProps) {
               fontWeight: 700,
               color: '#0d2b45',
               lineHeight: 1.2,
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              whiteSpace: 'nowrap',
             }}>
-              LA CASA DE LA PESCA DEL LLANO
+              <span style={{ display: 'block' }}>LA CASA DE LA PESCA</span>
+              <span style={{ display: 'block', fontSize: 'clamp(10px, 2.5vw, 15px)' }}>DEL LLANO</span>
             </h1>
             <p style={{
               fontSize: '10px',
