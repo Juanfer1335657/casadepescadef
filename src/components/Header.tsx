@@ -56,10 +56,12 @@ export default function Header({ showAdminLink = false }: HeaderProps) {
           <div style={{ minWidth: 0 }}>
             <h1 style={{
               fontFamily: "'Epilogue', sans-serif",
-              fontSize: 'clamp(14px, 3vw, 18px)',
+              fontSize: 'clamp(12px, 3vw, 18px)',
               fontWeight: 700,
               color: '#0d2b45',
               lineHeight: 1.2,
+              overflow: 'hidden',
+              textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
             }}>
               LA CASA DE LA PESCA DEL LLANO

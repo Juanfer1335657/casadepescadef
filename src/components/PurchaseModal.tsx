@@ -293,10 +293,11 @@ export default function PurchaseModal({ product, isOpen, onClose, whatsappNumber
 
                   {product.description && (
                     <p style={{
-                      fontSize: '14px',
+                      fontSize: 'clamp(13px, 3.5vw, 14px)',
                       color: '#43474d',
                       marginBottom: '16px',
                       lineHeight: 1.6,
+                      whiteSpace: 'pre-wrap',
                     }}>
                       {product.description}
                     </p>

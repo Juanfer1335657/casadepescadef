@@ -190,6 +190,7 @@ export default function ProductCard({ product, onOpenModal, onViewImage, onEdit,
             color: '#43474d',
             marginBottom: '12px',
             flex: 1,
+            whiteSpace: 'pre-wrap',
           }}>
             {product.description}
           </p>
